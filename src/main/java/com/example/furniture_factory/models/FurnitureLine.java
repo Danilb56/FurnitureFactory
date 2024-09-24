@@ -25,6 +25,15 @@ public class FurnitureLine {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "FurnitureLine{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", furnitureList=" + furnitureList +
+                '}';
+    }
+
     public void setName(String name) {
         this.name = name;
     }

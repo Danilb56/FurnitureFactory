@@ -47,4 +47,14 @@ public class Component {
     public void setType(ComponentTypeEnum type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Component{" +
+                "code=" + code +
+                ", price=" + price +
+                ", type=" + type +
+                ", count=" + count +
+                '}';
+    }
 }

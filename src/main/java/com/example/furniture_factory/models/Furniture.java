@@ -80,4 +80,17 @@ public class Furniture {
     public void setFurnitureLine(FurnitureLine furnitureLine) {
         this.furnitureLine = furnitureLine;
     }
+
+    @Override
+    public String toString() {
+        return "Furniture{" +
+                "id=" + id +
+                ", type=" + type +
+                ", article=" + article +
+                ", price=" + price +
+                ", furnitureLineId=" + furnitureLineId +
+                ", furnitureLine=" + furnitureLine +
+                ", components=" + components +
+                '}';
+    }
 }
