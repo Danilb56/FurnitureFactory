@@ -19,7 +19,9 @@ public class Application {
             // Service code
             FurnitureService furnitureService = new FurnitureService(connection);
 
-            System.out.println(furnitureService.findAll());
+//            Furniture furniture = new Furniture(1L, FurnitureTypeEnum.CHAIR, 321L, 100L, 1L, null);
+
+            furnitureService.deleteById(1L);
 
 
             connection.close();
