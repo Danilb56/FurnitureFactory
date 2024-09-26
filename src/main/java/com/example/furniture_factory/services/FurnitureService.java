@@ -1,9 +1,12 @@
 package com.example.furniture_factory.services;
 
 import com.example.furniture_factory.enums.FurnitureTypeEnum;
+import com.example.furniture_factory.exceptions.DataNotLoadedFromDBException;
 import com.example.furniture_factory.exceptions.NotFoundException;
+import com.example.furniture_factory.exceptions.SavingFailedException;
 import com.example.furniture_factory.models.Furniture;
 import com.example.furniture_factory.models.FurnitureLine;
+import com.example.furniture_factory.utils.IdUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,14 +84,15 @@ public class FurnitureService {
     }
 
     public Furniture create(Furniture furniture) {
+        Long id = IdUtils.getNewFurnitureId(this);
         try {
             String query = "insert into furniture_factory.furniture (id, type, article, price, furniture_line_id)\n" +
                     "        VALUES (" +
-                    "id, " +
-                    "type, " +
-                    "article, " +
-                    "price, " +
-                    "furniture_line_id)";
+                    id + ", " +
+                    "'" + furniture.getType().getName() + "', " +
+                    furniture.getArticle() + ", " +
+                    furniture.getPrice() + ", " +
+                    furniture.getFurnitureLineId() + ")";
 
             PreparedStatement ps = connection.prepareStatement(query);
 
@@ -96,7 +100,9 @@ public class FurnitureService {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new SavingFailedException("Не удалось сохранить мебель");
         }
+        return findById(id);
     }
 
     public Long getLargestId() {
@@ -110,8 +116,6 @@ public class FurnitureService {
                     .get();
         }
     }
-
-    //CRUD
 
     private List<Furniture> selectFromDataBase(String query) {
         List<Furniture> list = null;
@@ -140,6 +144,7 @@ public class FurnitureService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new DataNotLoadedFromDBException("Не удалось загрузить данные из базы");
         }
         return list;
     }

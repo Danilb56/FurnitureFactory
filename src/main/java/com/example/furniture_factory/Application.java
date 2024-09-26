@@ -1,5 +1,7 @@
 package com.example.furniture_factory;
 
+import com.example.furniture_factory.enums.FurnitureTypeEnum;
+import com.example.furniture_factory.models.Furniture;
 import com.example.furniture_factory.services.FurnitureService;
 
 import java.sql.Connection;
@@ -19,9 +21,9 @@ public class Application {
             // Service code
             FurnitureService furnitureService = new FurnitureService(connection);
 
-//            Furniture furniture = new Furniture(1L, FurnitureTypeEnum.CHAIR, 321L, 100L, 1L, null);
+            Furniture furniture = new Furniture(-1000L, FurnitureTypeEnum.DOOR, 123L, 1000L, 1L, null);
 
-            furnitureService.deleteById(1L);
+            furnitureService.create(furniture);
 
 
             connection.close();

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="439.0" prefWidth="528.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.furniture_factory.controllers.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <Pane>
+        <ToolBar prefHeight="40.0" prefWidth="488.0">
+            <Button mnemonicParsing="false" text="Добавить" onAction="#addFurniture"/>
+            <Button mnemonicParsing="false" text="Изменить" onAction="#editFurniture"/>
+            <Button mnemonicParsing="false" text="Удалить" onAction="#deleteFurniture"/>
+            <Button mnemonicParsing="false" text="Обновить" onAction="#updatePage"/>
+        </ToolBar>
+    </Pane>
+
+    <Label fx:id="welcomeText"/>
+    <Pane layoutX="30.0" layoutY="191.0">
+        <TableView layoutY="-43.0" prefHeight="243.0" prefWidth="488.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="ID"/>
+                <TableColumn prefWidth="75.0" text="Тип"/>
+                <TableColumn prefWidth="75.0" text="Артикул"/>
+                <TableColumn prefWidth="75.0" text="Цена"/>
+                <TableColumn prefWidth="185.79998779296875" text="Линейка фурнитуры"/>
+            </columns>
+        </TableView>
+    </Pane>
+</VBox>
