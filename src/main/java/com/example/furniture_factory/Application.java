@@ -1,7 +1,6 @@
 package com.example.furniture_factory;
 
-import com.example.furniture_factory.enums.FurnitureTypeEnum;
-import com.example.furniture_factory.models.Furniture;
+import com.example.furniture_factory.controllers.HelloController;
 import com.example.furniture_factory.services.FurnitureService;
 
 import java.sql.Connection;
@@ -9,6 +8,7 @@ import java.sql.DriverManager;
 
 public class Application {
     public static void main(String[] args) {
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -21,10 +21,9 @@ public class Application {
             // Service code
             FurnitureService furnitureService = new FurnitureService(connection);
 
-            Furniture furniture = new Furniture(-1000L, FurnitureTypeEnum.DOOR, 123L, 1000L, 1L, null);
+            HelloApplication.helloController = new HelloController(furnitureService);
 
-            furnitureService.create(furniture);
-
+            HelloApplication.main(args);
 
             connection.close();
         } catch (Exception e) {

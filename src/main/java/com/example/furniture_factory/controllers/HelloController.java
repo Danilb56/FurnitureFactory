@@ -18,12 +18,17 @@ public class HelloController {
     }
 
     @FXML
+    public void initialize() {
+        System.out.println("init");
+    }
+
+    @FXML
     protected void addFurniture() {
         // Открыть окно с созданием мебели
         try {
             // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-            Furniture furniture = getFromWindow();
-            furnitureService.create(furniture);
+//            Furniture furniture = getFromWindow();
+//            furnitureService.create(furniture);
         } catch (SavingFailedException e) {
             // Выводим окно с ошибкой
         } finally {
@@ -42,8 +47,8 @@ public class HelloController {
                     .findFirst()
                     .orElseThrow(() -> new NotFoundException("Мебель не найдена"));
             // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-            Furniture furniture = getFromWindow();
-            furnitureService.update(furniture);
+//            Furniture furniture = getFromWindow();
+//            furnitureService.update(furniture);
         } catch (SavingFailedException e) {
             // Выводим окно с ошибкой
         } finally {
