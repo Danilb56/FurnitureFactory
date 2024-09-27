@@ -1,56 +1,75 @@
 package com.example.furniture_factory.controllers;
 
+import com.example.furniture_factory.enums.FurnitureTypeEnum;
 import com.example.furniture_factory.exceptions.DataNotLoadedFromDBException;
 import com.example.furniture_factory.exceptions.NotFoundException;
 import com.example.furniture_factory.exceptions.SavingFailedException;
 import com.example.furniture_factory.models.Furniture;
+import com.example.furniture_factory.models.FurnitureLine;
 import com.example.furniture_factory.services.FurnitureService;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.LongPropertyBase;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
-import java.util.List;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.StringConverter;
 
 public class HelloController {
     private final FurnitureService furnitureService;
     @FXML
-    public TableView<List<Furniture>> table;
+    public TableView<Furniture> table;
     @FXML
-    private TableColumn<Furniture, Long> idColumn;
+    public TableColumn<Furniture, Long> idColumn;
     @FXML
-    private TableColumn<Furniture, String> typeColumn;
+    public TableColumn<String, FurnitureTypeEnum> typeColumn;
     @FXML
-    private TableColumn<Furniture, Long> articleColumn;
+    public TableColumn<Furniture, Long> articleColumn;
     @FXML
-    private TableColumn<Furniture, Long> priceColumn;
+    public TableColumn<Furniture, Long> priceColumn;
     @FXML
-    private TableColumn<Furniture, String> furnitureLineColumn;
+    public TableColumn<String, FurnitureLine> furnitureLineColumn;
     @FXML
     public final ObservableList<Furniture> furnitureList = FXCollections.observableArrayList();
 
     public HelloController(FurnitureService furnitureService) {
         this.furnitureService = furnitureService;
-        this.idColumn.setCellValueFactory(cellData -> {
-            LongProperty lp = new SimpleLongProperty();
-            lp.setValue(cellData.getValue().getId());
-            return lp.orElse(cellData.getValue().getId());
-        });
-        this.typeColumn.setCellValueFactory(cellData -> cellData.getValue().getType().getName());
-        this.articleColumn.setCellValueFactory(cellData -> cellData.getValue().getArticle());
-        this.priceColumn.setCellValueFactory(cellData -> cellData.getValue().getPrice());
-        this.furnitureLineColumn.setCellValueFactory(cellData -> cellData.getValue().getFurnitureLine().getName());
     }
 
     @FXML
     public void initialize() {
+        table.setEditable(true);
+        this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        this.typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        this.typeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {
+            @Override
+            public String toString(FurnitureTypeEnum s) {
+                return null;
+            }
+
+            @Override
+            public FurnitureTypeEnum fromString(String s) {
+                return null;
+            }
+        }));
+        this.articleColumn.setCellValueFactory(new PropertyValueFactory<>("article"));
+        this.priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        this.furnitureLineColumn.setCellValueFactory(new PropertyValueFactory<>("furnitureLine"));
+        this.furnitureLineColumn.setCellFactory(TextFieldTableCell.forTableColumn(
+                new StringConverter<>() {
+                    @Override
+                    public String toString(FurnitureLine s) {
+                        return s.getName();
+                    }
+
+                    @Override
+                    public FurnitureLine fromString(String s) {
+                        return null;
+                    }
+                }));
         this.updatePage();
+
     }
 
     @FXML
@@ -73,7 +92,7 @@ public class HelloController {
         System.out.println("editFurniture");
         // Открыть окно с изменением мебели
         try {
-            Long id = 1L;
+            Long id = this.table.getFocusModel().getFocusedItem().getId();
             Furniture furnitureToEdit = this.furnitureList
                     .stream()
                     .filter(furniture -> furniture.getId().equals(id))
@@ -91,6 +110,9 @@ public class HelloController {
 
     @FXML
     protected void deleteFurniture() {
+        Long id = this.table.getFocusModel().getFocusedItem().getId();
+        this.furnitureService.deleteById(id);
+        updatePage();
         System.out.println("deleteFurniture");
     }
 
@@ -99,6 +121,7 @@ public class HelloController {
         System.out.println("updatePage");
         try {
             furnitureList.setAll(furnitureService.findAll());
+            table.setItems(furnitureList);
         } catch (DataNotLoadedFromDBException e) {
             // Отобразить окно ошибки
         }

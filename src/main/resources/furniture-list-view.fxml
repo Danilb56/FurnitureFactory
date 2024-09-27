@@ -20,8 +20,7 @@
 
     <Label fx:id="welcomeText"/>
     <Pane layoutX="30.0" layoutY="191.0">
-        <TableView layoutY="-43.0" prefHeight="243.0" prefWidth="488.0" fx:id="table"
-            items="${furnitureList}">
+        <TableView layoutY="-43.0" prefHeight="243.0" prefWidth="488.0" fx:id="table">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID"/>
                 <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Тип"/>

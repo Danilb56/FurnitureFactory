@@ -28,7 +28,9 @@ public class FurnitureService {
                 "         left join furniture_factory.furniture_line fl" +
                 "                   on f.furniture_line_id = fl.id";
 
-        return selectFromDataBase(query);
+        List<Furniture> furnitureList = selectFromDataBase(query);
+        System.out.println(furnitureList.size());
+        return furnitureList;
     }
 
     public Furniture findById(Long id) {
