@@ -23,7 +23,7 @@ public class Application {
 
             HelloApplication.helloController = new HelloController(furnitureService);
 
-            HelloApplication.main(args);
+            HelloApplication.init(args);
 
             connection.close();
         } catch (Exception e) {

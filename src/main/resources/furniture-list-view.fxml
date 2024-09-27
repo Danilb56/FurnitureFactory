@@ -20,13 +20,14 @@
 
     <Label fx:id="welcomeText"/>
     <Pane layoutX="30.0" layoutY="191.0">
-        <TableView layoutY="-43.0" prefHeight="243.0" prefWidth="488.0">
+        <TableView layoutY="-43.0" prefHeight="243.0" prefWidth="488.0" fx:id="table"
+            items="${furnitureList}">
             <columns>
-                <TableColumn prefWidth="75.0" text="ID"/>
-                <TableColumn prefWidth="75.0" text="Тип"/>
-                <TableColumn prefWidth="75.0" text="Артикул"/>
-                <TableColumn prefWidth="75.0" text="Цена"/>
-                <TableColumn prefWidth="185.79998779296875" text="Линейка фурнитуры"/>
+                <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID"/>
+                <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Тип"/>
+                <TableColumn fx:id="articleColumn" prefWidth="75.0" text="Артикул"/>
+                <TableColumn fx:id="priceColumn" prefWidth="75.0" text="Цена"/>
+                <TableColumn fx:id="furnitureLineColumn" prefWidth="185.79998779296875" text="Линейка фурнитуры"/>
             </columns>
         </TableView>
     </Pane>
