@@ -18,7 +18,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Arrays;
 
 public class HelloController {
     private final FurnitureService furnitureService;
@@ -94,13 +94,13 @@ public class HelloController {
             Furniture newFurniture = new Furniture();
             openDialog(newFurniture);
             // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-            furnitureService.create(newFurniture);
+            Furniture savedFurniture = furnitureService.create(newFurniture);
+            furnitureList.add(savedFurniture);
         } catch (SavingFailedException e) {
             // Выводим окно с ошибкой
         } catch (IOException e) {
 
-        }
-        finally {
+        } finally {
             // Выводим результат сохранения (Окно типа всё хорошо)
         }
     }
@@ -108,18 +108,22 @@ public class HelloController {
     @FXML
     protected void editFurniture() {
         System.out.println("editFurniture");
-        // Открыть окно с изменением мебели
+        Long id = this.table.getFocusModel().getFocusedItem().getId();
+        //TODO fix edit reload
+        Furniture furnitureToEdit = this.furnitureList
+                .stream()
+                .filter(furniture -> furniture.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Мебель не найдена"));
         try {
-            Long id = this.table.getFocusModel().getFocusedItem().getId();
-            Furniture furnitureToEdit = this.furnitureList
-                    .stream()
-                    .filter(furniture -> furniture.getId().equals(id))
-                    .findFirst()
-                    .orElseThrow(() -> new NotFoundException("Мебель не найдена"));
-            // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-//            Furniture furniture = getFromWindow();
-//            furnitureService.update(furniture);
-        } catch (SavingFailedException e) {
+            furnitureList.remove(furnitureToEdit);
+            openDialog(furnitureToEdit); // Открыть окно с изменением мебели
+            furnitureList.add(furnitureToEdit);
+            furnitureService.update(furnitureToEdit); // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+        } catch (SavingFailedException | IOException e) {
+            if (furnitureToEdit != null) {
+                furnitureList.add(furnitureToEdit); // Добавляем удалённую перед ошибкой мебель
+            }
             // Выводим окно с ошибкой
         } finally {
             // Выводим результат изменения (Окно типа всё хорошо)
@@ -128,9 +132,10 @@ public class HelloController {
 
     @FXML
     protected void deleteFurniture() {
-        Long id = this.table.getFocusModel().getFocusedItem().getId();
-        this.furnitureService.deleteById(id);
-        updatePage();
+        Furniture furnitureToDelete = table.getFocusModel().getFocusedItem();
+        Long id = furnitureToDelete.getId();
+        furnitureService.deleteById(id);
+        furnitureList.remove(furnitureToDelete);
         System.out.println("deleteFurniture");
     }
 
@@ -157,8 +162,25 @@ public class HelloController {
         Parent content = loader.load();
 
         dialog.getDialogPane().setContent(content);
+        dialog.setOnCloseRequest((event) -> {
+            furniture.setArticle(Long.valueOf(articleTextField.getText()));
+            furniture.setPrice(Long.valueOf(priceTextField.getText()));
+            furniture.setType(furnitureTypeChoiceBox.getValue());
+            furniture.setFurnitureLineId(1L);
+//            furniture.setFurnitureLine(furnitureLineChoiceBox.getValue());
+//            furniture.setFurnitureLineId(furnitureLineChoiceBox.getValue().getId());
+                });
+        furnitureTypeChoiceBox.setItems(FXCollections.observableList(Arrays.asList(FurnitureTypeEnum.values())));
+//        furnitureLineChoiceBox.setItems(FXCollections.observableList(Arrays.asList(furnitureLineService.getAll())));
 
-        Optional<Furniture> result = dialog.showAndWait();
+        if (furniture.getId() != null) {
+            articleTextField.setText(String.valueOf(furniture.getArticle()));
+            priceTextField.setText(String.valueOf(furniture.getPrice()));
+            furnitureTypeChoiceBox.setValue(furniture.getType());
+//            furnitureLineChoiceBox.setValue(furniture.getFurnitureLine());
+        }
+        //TODO fix close button
+        dialog.showAndWait();
     }
 
     public void closeDialog() {

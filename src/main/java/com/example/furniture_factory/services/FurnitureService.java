@@ -65,7 +65,7 @@ public class FurnitureService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return findById(furniture.getId());
+        return furniture;
     }
 
     public void deleteById(Long id) {
@@ -104,7 +104,8 @@ public class FurnitureService {
             e.printStackTrace();
             throw new SavingFailedException("Не удалось сохранить мебель");
         }
-        return findById(id);
+        furniture.setId(id);
+        return furniture;
     }
 
     public Long getLargestId() {

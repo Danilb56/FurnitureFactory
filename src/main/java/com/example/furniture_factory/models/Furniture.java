@@ -4,6 +4,7 @@ import com.example.furniture_factory.enums.FurnitureTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Furniture {
@@ -95,5 +96,18 @@ public class Furniture {
                 ", furnitureLine=" + furnitureLine +
                 ", components=" + components +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Furniture furniture = (Furniture) o;
+        return Objects.equals(id, furniture.id) && type == furniture.type && Objects.equals(article, furniture.article) && Objects.equals(price, furniture.price) && Objects.equals(furnitureLineId, furniture.furnitureLineId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, article, price, furnitureLineId);
     }
 }
