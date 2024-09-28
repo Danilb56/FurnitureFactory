@@ -10,11 +10,15 @@ import com.example.furniture_factory.services.FurnitureService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
+
+import java.io.IOException;
+import java.util.Optional;
 
 public class HelloController {
     private final FurnitureService furnitureService;
@@ -32,6 +36,17 @@ public class HelloController {
     public TableColumn<String, FurnitureLine> furnitureLineColumn;
     @FXML
     public final ObservableList<Furniture> furnitureList = FXCollections.observableArrayList();
+
+    @FXML
+    public ChoiceBox<FurnitureTypeEnum> furnitureTypeChoiceBox;
+    @FXML
+    public TextField articleTextField;
+    @FXML
+    public TextField priceTextField;
+    @FXML
+    public ChoiceBox<FurnitureLine> furnitureLineChoiceBox;
+
+    private Dialog<Furniture> dialog;
 
     public HelloController(FurnitureService furnitureService) {
         this.furnitureService = furnitureService;
@@ -69,20 +84,23 @@ public class HelloController {
                     }
                 }));
         this.updatePage();
-
     }
 
     @FXML
     protected void addFurniture() {
-        // Открыть окно с созданием мебели
         System.out.println("addFurniture");
         try {
+            // Открыть окно с созданием мебели
+            Furniture newFurniture = new Furniture();
+            openDialog(newFurniture);
             // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-//            Furniture furniture = getFromWindow();
-//            furnitureService.create(furniture);
+            furnitureService.create(newFurniture);
         } catch (SavingFailedException e) {
             // Выводим окно с ошибкой
-        } finally {
+        } catch (IOException e) {
+
+        }
+        finally {
             // Выводим результат сохранения (Окно типа всё хорошо)
         }
     }
@@ -125,5 +143,25 @@ public class HelloController {
         } catch (DataNotLoadedFromDBException e) {
             // Отобразить окно ошибки
         }
+    }
+
+    private void openDialog(Furniture furniture) throws IOException {
+        this.dialog = new Dialog<>();
+        dialog.setResult(furniture);
+        dialog.setTitle(furniture.getId() == null ? "Создание мебели" : "Изменение мебели");
+        dialog.setResizable(true);
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/furniture-registration-dialog.fxml"));
+        loader.setControllerFactory(i -> this);
+        Parent content = loader.load();
+
+        dialog.getDialogPane().setContent(content);
+
+        Optional<Furniture> result = dialog.showAndWait();
+    }
+
+    public void closeDialog() {
+        this.dialog.close();
     }
 }

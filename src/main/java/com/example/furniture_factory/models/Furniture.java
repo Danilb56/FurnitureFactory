@@ -16,6 +16,9 @@ public class Furniture {
     private FurnitureLine furnitureLine;
     private final List<Component> components = new ArrayList<>();
 
+    public Furniture() {
+    }
+
     public Furniture(Long id, FurnitureTypeEnum type, Long article, Long price, Long furnitureLineId, FurnitureLine furnitureLine) {
         this.id = id;
         this.type = type;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.furniture_factory.controllers.HelloController">
+    <content>
+        <AnchorPane>
+            <ChoiceBox fx:id="furnitureTypeChoiceBox" layoutX="394.0" layoutY="38.0" prefWidth="150.0"/>
+            <TextField fx:id="articleTextField" layoutX="395.0" layoutY="102.0"/>
+            <TextField fx:id="priceTextField" layoutX="396.0" layoutY="166.0"/>
+            <ChoiceBox fx:id="furnitureLineChoiceBox" layoutX="395.0" layoutY="216.0" prefWidth="150.0"/>
+            <Label layoutX="148.0" layoutY="42.0" text="Тип мебели"/>
+            <Label layoutX="148.0" layoutY="102.0" text="Артикул"/>
+            <Label layoutX="148.0" layoutY="170.0" text="Цена"/>
+            <Label layoutX="147.0" layoutY="220.0" text="Линейка мебели"/>
+            <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" text="Сохранить" onAction="#closeDialog"/>
+            <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" text="Отмена" onAction="#closeDialog"/>
+        </AnchorPane>
+    </content>
+</DialogPane>
