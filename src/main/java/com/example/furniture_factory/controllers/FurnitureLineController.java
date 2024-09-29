@@ -9,11 +9,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
@@ -48,9 +46,10 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
             // Открыть окно с созданием линейки мебели
             FurnitureLine newFurnitureLine = new FurnitureLine();
             openDialog(newFurnitureLine);
-            // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-            FurnitureLine savedFurnitureLine = service.create(newFurnitureLine);
-            furnitureLineList.add(savedFurnitureLine);
+            if (!ignoreDialogResult) { // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+                FurnitureLine savedFurnitureLine = service.create(newFurnitureLine);
+                furnitureLineList.add(savedFurnitureLine);
+            }
         } catch (SavingFailedException | IOException e) {
             e.printStackTrace();
             // Выводим окно с ошибкой
@@ -61,22 +60,25 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
 
     @FXML
     public void editFurnitureLine() {
-        Long id = this.table.getFocusModel().getFocusedItem().getId();
-        //TODO fix edit reload
-        FurnitureLine furnitureLineToEdit = this.furnitureLineList
-                .stream()
-                .filter(furniture -> furniture.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Мебель не найдена"));
         try {
-            furnitureLineList.remove(furnitureLineToEdit);
-            openDialog(furnitureLineToEdit); // Открыть окно с изменением линейки мебели
-            furnitureLineList.add(furnitureLineToEdit);
-            service.update(furnitureLineToEdit); // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-        } catch (SavingFailedException | IOException e) {
-            if (furnitureLineToEdit != null) {
-                furnitureLineList.add(furnitureLineToEdit); // Добавляем удалённую перед ошибкой линейку мебели
+            Long id = this.table.getFocusModel().getFocusedItem().getId();
+            FurnitureLine furnitureLineToEdit = null;
+            int index = -1;
+            for (int i = 0; i < furnitureLineList.size(); i++) {
+                if (furnitureLineList.get(i).getId().equals(id)) {
+                    furnitureLineToEdit = furnitureLineList.get(i);
+                    index = i;
+                }
             }
+            if (furnitureLineToEdit == null) {
+                throw new NotFoundException("Не удалось найти линейку мебели");
+            }
+            openDialog(furnitureLineToEdit); // Открыть окно с изменением линейки мебели
+            if (!ignoreDialogResult) { // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+                furnitureLineList.set(index, furnitureLineToEdit);
+                service.update(furnitureLineToEdit);
+            }
+        } catch (SavingFailedException | IOException e) {
             e.printStackTrace();
             // Выводим окно с ошибкой
         } finally {
@@ -96,6 +98,7 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
     }
 
     private void openDialog(FurnitureLine furnitureLine) throws IOException {
+        this.ignoreDialogResult = true;
         this.dialog = new Dialog<>();
         dialog.setResult(furnitureLine);
         dialog.setTitle(furnitureLine.getId() == null ? "Создание линейки мебели" : "Изменение линейки мебели");
@@ -108,17 +111,31 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
 
         dialog.getDialogPane().setContent(content);
         dialog.setOnCloseRequest((event) -> {
+            if (ignoreDialogResult) {
+                return;
+            }
             furnitureLine.setName(nameTextField.getText());
         });
 
         if (furnitureLine.getId() != null) {
             nameTextField.setText(furnitureLine.getName());
         }
-        //TODO fix close button
+
+        //Создание мнимой кнопки закрытия для правильной работы "Х"
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButton.managedProperty().bind(closeButton.visibleProperty());
+        closeButton.setVisible(false);
+
         dialog.showAndWait();
     }
 
-    public void closeDialog() {
+    public void dialogSaveButton() {
+        this.ignoreDialogResult = false;
+        this.dialog.close();
+    }
+
+    public void dialogCancelButton() {
         this.dialog.close();
     }
 }

@@ -15,8 +15,8 @@
             <Label layoutX="148.0" layoutY="102.0" text="Артикул"/>
             <Label layoutX="148.0" layoutY="170.0" text="Цена"/>
             <Label layoutX="147.0" layoutY="220.0" text="Линейка мебели"/>
-            <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" text="Сохранить" onAction="#closeDialog"/>
-            <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" text="Отмена" onAction="#closeDialog"/>
+            <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" text="Сохранить" onAction="#dialogSaveButton"/>
+            <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" text="Отмена" onAction="#dialogCancelButton"/>
         </AnchorPane>
     </content>
 </DialogPane>

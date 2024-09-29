@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -95,8 +96,10 @@ public class FurnitureController extends Controller<Furniture> {
             Furniture newFurniture = new Furniture();
             openDialog(newFurniture);
             // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-            Furniture savedFurniture = service.create(newFurniture);
-            furnitureList.add(savedFurniture);
+            if (!ignoreDialogResult) {
+                Furniture savedFurniture = service.create(newFurniture);
+                furnitureList.add(savedFurniture);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             // Выводим окно с ошибкой
@@ -119,10 +122,11 @@ public class FurnitureController extends Controller<Furniture> {
                 throw new NotFoundException("Не удалось найти мебель");
             }
             openDialog(furnitureToEdit); // Открыть окно с изменением мебели
-            furnitureList.set(index, furnitureToEdit);
-            service.update(furnitureToEdit); // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+            if (!ignoreDialogResult) { // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+                furnitureList.set(index, furnitureToEdit);
+                service.update(furnitureToEdit);
+            }
         } catch (SavingFailedException | IOException e) {
-
             e.printStackTrace();
             // Выводим окно с ошибкой
         } finally {
@@ -151,6 +155,7 @@ public class FurnitureController extends Controller<Furniture> {
 
     private void openDialog(Furniture furniture) throws IOException {
         this.dialog = new Dialog<>();
+        this.ignoreDialogResult = true;
         dialog.setResult(furniture);
         dialog.setTitle(furniture.getId() == null ? "Создание мебели" : "Изменение мебели");
         dialog.setResizable(true);
@@ -162,13 +167,16 @@ public class FurnitureController extends Controller<Furniture> {
 
         dialog.getDialogPane().setContent(content);
         dialog.setOnCloseRequest((event) -> {
+            if (ignoreDialogResult) {
+                return;
+            }
             furniture.setArticle(Long.valueOf(articleTextField.getText()));
             furniture.setPrice(Long.valueOf(priceTextField.getText()));
             furniture.setType(furnitureTypeChoiceBox.getValue());
             furniture.setFurnitureLineId(1L);
             furniture.setFurnitureLine(furnitureLineChoiceBox.getValue());
             furniture.setFurnitureLineId(furnitureLineChoiceBox.getValue().getId());
-                });
+        });
         furnitureTypeChoiceBox.setItems(FXCollections.observableList(Arrays.asList(FurnitureTypeEnum.values())));
         furnitureLineChoiceBox.setItems(FXCollections.observableList(furnitureLineService.findAll()));
 
@@ -178,11 +186,22 @@ public class FurnitureController extends Controller<Furniture> {
             furnitureTypeChoiceBox.setValue(furniture.getType());
             furnitureLineChoiceBox.setValue(furniture.getFurnitureLine());
         }
-        //TODO fix close button
+
+        //Создание мнимой кнопки закрытия для правильной работы "Х"
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButton.managedProperty().bind(closeButton.visibleProperty());
+        closeButton.setVisible(false);
+
         dialog.showAndWait();
     }
 
-    public void closeDialog() {
+    public void dialogSaveButton() {
+        this.ignoreDialogResult = false;
+        this.dialog.close();
+    }
+
+    public void dialogCancelButton() {
         this.dialog.close();
     }
 }

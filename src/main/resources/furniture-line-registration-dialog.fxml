@@ -8,8 +8,8 @@
         <AnchorPane prefHeight="303.0" prefWidth="566.0">
             <TextField fx:id="nameTextField" layoutX="246.0" layoutY="135.0" prefHeight="23.0" prefWidth="299.0" />
             <Label layoutX="148.0" layoutY="135.0" prefHeight="26.0" prefWidth="83.0" text="Наименование" />
-            <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" onAction="#closeDialog" text="Сохранить" />
-            <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" onAction="#closeDialog" text="Отмена" />
+            <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" onAction="#dialogSaveButton" text="Сохранить" />
+            <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" onAction="#dialogCancelButton" text="Отмена" />
         </AnchorPane>
     </content>
 </DialogPane>

@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -71,9 +72,11 @@ public class ComponentController extends Controller<Component> {
             // Открыть окно с созданием мебели
             Component newComponent = new Component();
             openDialog(newComponent);
+            if (!ignoreDialogResult) {
+                Component savedComponent = service.create(newComponent);
+                componentList.add(savedComponent);
+            }
             // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-            Component savedComponent = service.create(newComponent);
-            componentList.add(savedComponent);
         } catch (Exception e) {
             e.printStackTrace();
             // Выводим окно с ошибкой
@@ -96,8 +99,10 @@ public class ComponentController extends Controller<Component> {
                 throw new NotFoundException("Не удалось найти компонент");
             }
             openDialog(componentToEdit); // Открыть окно с изменением компонента
-            componentList.set(index, componentToEdit);
-            service.update(componentToEdit); // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+            if (!ignoreDialogResult) { // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+                componentList.set(index, componentToEdit);
+                service.update(componentToEdit);
+            }
         } catch (SavingFailedException | IOException e) {
             e.printStackTrace();
 
@@ -128,6 +133,7 @@ public class ComponentController extends Controller<Component> {
 
     private void openDialog(Component component) throws IOException {
         this.dialog = new Dialog<>();
+        this.ignoreDialogResult = true;
         dialog.setResult(component);
         dialog.setTitle(component.getCode() == null ? "Создание компонента" : "Изменение компонента");
         dialog.setResizable(true);
@@ -139,6 +145,9 @@ public class ComponentController extends Controller<Component> {
 
         dialog.getDialogPane().setContent(content);
         dialog.setOnCloseRequest((event) -> {
+            if (ignoreDialogResult) {
+                return;
+            }
             component.setPrice(Long.valueOf(priceTextField.getText()));
             component.setType(componentTypeChoiceBox.getValue());
         });
@@ -148,11 +157,22 @@ public class ComponentController extends Controller<Component> {
             priceTextField.setText(String.valueOf(component.getPrice()));
             componentTypeChoiceBox.setValue(component.getType());
         }
-        //TODO fix close button
+
+        //Создание мнимой кнопки закрытия для правильной работы "Х"
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButton.managedProperty().bind(closeButton.visibleProperty());
+        closeButton.setVisible(false);
+
         dialog.showAndWait();
     }
 
-    public void closeDialog() {
+    public void dialogSaveButton() {
+        this.ignoreDialogResult = false;
+        this.dialog.close();
+    }
+
+    public void dialogCancelButton() {
         this.dialog.close();
     }
 
