@@ -16,7 +16,7 @@ public class MainViewController {
     public Pane pane;
     private MainViewWindowEnum currentWindow = null;
 
-    public static final Map<MainViewWindowEnum, Controller> controllerMap = new HashMap<>();
+    public static final Map<MainViewWindowEnum, Controller<?>> controllerMap = new HashMap<>();
 
     public MainViewController(Stage stage) {
         this.stage = stage;

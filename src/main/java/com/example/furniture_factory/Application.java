@@ -4,6 +4,7 @@ import com.example.furniture_factory.controllers.FurnitureController;
 import com.example.furniture_factory.controllers.FurnitureLineController;
 import com.example.furniture_factory.controllers.MainViewController;
 import com.example.furniture_factory.enums.MainViewWindowEnum;
+import com.example.furniture_factory.services.ComponentService;
 import com.example.furniture_factory.services.FurnitureLineService;
 import com.example.furniture_factory.services.FurnitureService;
 
@@ -23,12 +24,14 @@ public class Application {
                     "root", "Mysql_password");
 
             // Service code
-            FurnitureService furnitureService = new FurnitureService(connection);
+            ComponentService componentService = new ComponentService(connection);
+
+            FurnitureService furnitureService = new FurnitureService(connection, componentService);
 
             FurnitureLineService furnitureLineService = new FurnitureLineService(connection);
 
             MainViewController.controllerMap.put(
-                    MainViewWindowEnum.FURNITURE_LIST, new FurnitureController(furnitureService));
+                    MainViewWindowEnum.FURNITURE_LIST, new FurnitureController(furnitureService, furnitureLineService));
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.FURNITURE_LINE_LIST, new FurnitureLineController(furnitureLineService));
             MainViewController.controllerMap.put(

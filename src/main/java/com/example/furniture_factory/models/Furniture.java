@@ -33,6 +33,10 @@ public class Furniture {
         components.add(component);
     }
 
+    public void addComponents(List<Component> components) {
+        this.components.addAll(components);
+    }
+
     public List<Component> getComponents() {
         return components;
     }

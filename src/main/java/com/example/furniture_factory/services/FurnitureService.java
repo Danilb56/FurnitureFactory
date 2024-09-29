@@ -4,6 +4,7 @@ import com.example.furniture_factory.enums.FurnitureTypeEnum;
 import com.example.furniture_factory.exceptions.DataNotLoadedFromDBException;
 import com.example.furniture_factory.exceptions.NotFoundException;
 import com.example.furniture_factory.exceptions.SavingFailedException;
+import com.example.furniture_factory.models.Component;
 import com.example.furniture_factory.models.Furniture;
 import com.example.furniture_factory.models.FurnitureLine;
 import com.example.furniture_factory.utils.IdUtils;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FurnitureService extends Service<Furniture> {
+    private final ComponentService componentService;
 
-    public FurnitureService(Connection connection) {
+    public FurnitureService(Connection connection, ComponentService componentService) {
         super(connection);
+        this.componentService = componentService;
     }
 
     @Override
@@ -145,6 +148,11 @@ public class FurnitureService extends Service<Furniture> {
                         rs.getLong("furniture_line_id"),
                         furnitureLine
                 );
+
+                List<Component> components =
+                        componentService.findAllByFurnitureId(furniture.getId());
+                furniture.addComponents(components);
+
                 list.add(furniture);
             }
         } catch (SQLException e) {

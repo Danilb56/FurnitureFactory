@@ -28,10 +28,7 @@ public class FurnitureLine {
 
     @Override
     public String toString() {
-        return "FurnitureLine{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return name;
     }
 
     public void setName(String name) {

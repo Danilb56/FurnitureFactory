@@ -9,11 +9,10 @@ public class Component {
 
     private Long count;
 
-    public Component(Long code, Long price, ComponentTypeEnum type, Long count) {
+    public Component(Long code, Long price, ComponentTypeEnum type) {
         this.code = code;
         this.price = price;
         this.type = type;
-        this.count = count;
     }
 
     public Long getCount() {
