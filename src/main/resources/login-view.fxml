@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.furniture_factory.controllers.UserController">
+   <PasswordField fx:id="passwordField" layoutX="208.0" layoutY="236.0" />
+   <TextField fx:id="loginField" layoutX="208.0" layoutY="175.0" />
+   <Label layoutX="208.0" layoutY="213.0" text="Пароль" />
+   <Label layoutX="208.0" layoutY="143.0" text="Логин" />
+   <Label layoutX="269.0" layoutY="63.0" text="Вход в аккаунт" />
+   <Button layoutX="216.0" layoutY="275.0" mnemonicParsing="false" onAction="#tryLogin" text="Войти" />
+   <Label layoutX="283.0" layoutY="279.0" text="Пароль неверный" textFill="RED" fx:id="incorrectPasswordLabel"/>
+</AnchorPane>
