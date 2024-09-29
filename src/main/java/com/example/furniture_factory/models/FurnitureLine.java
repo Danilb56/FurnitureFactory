@@ -6,6 +6,8 @@ public class FurnitureLine {
     private Long id;
     private String name;
 
+    public FurnitureLine() {
+    }
 
     public FurnitureLine(Long id, String name) {
         this.id = id;

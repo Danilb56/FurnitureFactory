@@ -1,6 +1,7 @@
 package com.example.furniture_factory;
 
-import com.example.furniture_factory.controllers.HelloController;
+import com.example.furniture_factory.controllers.FurnitureController;
+import com.example.furniture_factory.controllers.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,20 +10,24 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
-    public static HelloController helloController;
+public class JavaFXApplication extends Application {
+    public static FurnitureController furnitureController;
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/furniture-list-view.fxml"));
-        loader.setControllerFactory(i -> helloController);
+        loader.setLocation(getClass().getResource("/main-view.fxml"));
+        loader.setControllerFactory(i -> this.createMainController(stage));
         Parent content = loader.load();
 
         Scene scene = new Scene(content);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private MainViewController createMainController(Stage stage) {
+        return new MainViewController(stage);
     }
 
     public static void init(String[] args) {

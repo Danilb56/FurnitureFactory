@@ -15,24 +15,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FurnitureService {
-    private final Connection connection;
+public class FurnitureService extends Service<Furniture> {
 
     public FurnitureService(Connection connection) {
-        this.connection = connection;
+        super(connection);
     }
 
+    @Override
     public List<Furniture> findAll() {
         String query = "select *" +
                 "from furniture_factory.furniture f" +
                 "         left join furniture_factory.furniture_line fl" +
                 "                   on f.furniture_line_id = fl.id";
 
-        List<Furniture> furnitureList = selectFromDataBase(query);
-        System.out.println(furnitureList.size());
-        return furnitureList;
+        return selectFromDataBase(query);
     }
 
+    @Override
     public Furniture findById(Long id) {
         String query = "select *\n" +
                 "from furniture_factory.furniture f\n" +
@@ -47,6 +46,7 @@ public class FurnitureService {
         }
     }
 
+    @Override
     public Furniture update(Furniture furniture) {
         try {
             findById(furniture.getId());
@@ -68,6 +68,7 @@ public class FurnitureService {
         return furniture;
     }
 
+    @Override
     public void deleteById(Long id) {
         try {
             findById(id);
@@ -85,6 +86,7 @@ public class FurnitureService {
         }
     }
 
+    @Override
     public Furniture create(Furniture furniture) {
         Long id = IdUtils.getNewFurnitureId(this);
         try {

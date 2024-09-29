@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <DialogPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.furniture_factory.controllers.HelloController">
+            fx:controller="com.example.furniture_factory.controllers.FurnitureController">
     <content>
         <AnchorPane>
             <ChoiceBox fx:id="furnitureTypeChoiceBox" layoutX="394.0" layoutY="38.0" prefWidth="150.0"/>

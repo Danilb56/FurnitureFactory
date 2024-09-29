@@ -6,7 +6,7 @@ import com.example.furniture_factory.exceptions.NotFoundException;
 import com.example.furniture_factory.exceptions.SavingFailedException;
 import com.example.furniture_factory.models.Furniture;
 import com.example.furniture_factory.models.FurnitureLine;
-import com.example.furniture_factory.services.FurnitureService;
+import com.example.furniture_factory.services.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,8 +20,7 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class HelloController {
-    private final FurnitureService furnitureService;
+public class FurnitureController extends Controller<Furniture> {
     @FXML
     public TableView<Furniture> table;
     @FXML
@@ -48,8 +47,8 @@ public class HelloController {
 
     private Dialog<Furniture> dialog;
 
-    public HelloController(FurnitureService furnitureService) {
-        this.furnitureService = furnitureService;
+    public FurnitureController(Service<Furniture> furnitureService) {
+        super(furnitureService);
     }
 
     @FXML
@@ -88,13 +87,12 @@ public class HelloController {
 
     @FXML
     protected void addFurniture() {
-        System.out.println("addFurniture");
         try {
             // Открыть окно с созданием мебели
             Furniture newFurniture = new Furniture();
             openDialog(newFurniture);
             // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
-            Furniture savedFurniture = furnitureService.create(newFurniture);
+            Furniture savedFurniture = service.create(newFurniture);
             furnitureList.add(savedFurniture);
         } catch (SavingFailedException e) {
             // Выводим окно с ошибкой
@@ -107,7 +105,6 @@ public class HelloController {
 
     @FXML
     protected void editFurniture() {
-        System.out.println("editFurniture");
         Long id = this.table.getFocusModel().getFocusedItem().getId();
         //TODO fix edit reload
         Furniture furnitureToEdit = this.furnitureList
@@ -119,7 +116,7 @@ public class HelloController {
             furnitureList.remove(furnitureToEdit);
             openDialog(furnitureToEdit); // Открыть окно с изменением мебели
             furnitureList.add(furnitureToEdit);
-            furnitureService.update(furnitureToEdit); // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
+            service.update(furnitureToEdit); // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
         } catch (SavingFailedException | IOException e) {
             if (furnitureToEdit != null) {
                 furnitureList.add(furnitureToEdit); // Добавляем удалённую перед ошибкой мебель
@@ -134,16 +131,14 @@ public class HelloController {
     protected void deleteFurniture() {
         Furniture furnitureToDelete = table.getFocusModel().getFocusedItem();
         Long id = furnitureToDelete.getId();
-        furnitureService.deleteById(id);
+        service.deleteById(id);
         furnitureList.remove(furnitureToDelete);
-        System.out.println("deleteFurniture");
     }
 
     @FXML
     protected void updatePage() {
-        System.out.println("updatePage");
         try {
-            furnitureList.setAll(furnitureService.findAll());
+            furnitureList.setAll(service.findAll());
             table.setItems(furnitureList);
         } catch (DataNotLoadedFromDBException e) {
             // Отобразить окно ошибки

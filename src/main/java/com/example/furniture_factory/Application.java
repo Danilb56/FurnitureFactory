@@ -1,6 +1,10 @@
 package com.example.furniture_factory;
 
-import com.example.furniture_factory.controllers.HelloController;
+import com.example.furniture_factory.controllers.FurnitureController;
+import com.example.furniture_factory.controllers.FurnitureLineController;
+import com.example.furniture_factory.controllers.MainViewController;
+import com.example.furniture_factory.enums.MainViewWindowEnum;
+import com.example.furniture_factory.services.FurnitureLineService;
 import com.example.furniture_factory.services.FurnitureService;
 
 import java.sql.Connection;
@@ -21,9 +25,18 @@ public class Application {
             // Service code
             FurnitureService furnitureService = new FurnitureService(connection);
 
-            HelloApplication.helloController = new HelloController(furnitureService);
+            FurnitureLineService furnitureLineService = new FurnitureLineService(connection);
 
-            HelloApplication.init(args);
+            MainViewController.controllerMap.put(
+                    MainViewWindowEnum.FURNITURE_LIST, new FurnitureController(furnitureService));
+            MainViewController.controllerMap.put(
+                    MainViewWindowEnum.FURNITURE_LINE_LIST, new FurnitureLineController(furnitureLineService));
+            MainViewController.controllerMap.put(
+                    MainViewWindowEnum.COMPONENT_LIST, null);
+            MainViewController.controllerMap.put(
+                    MainViewWindowEnum.ACCOUNT_PAGE, null);
+
+            JavaFXApplication.init(args);
 
             connection.close();
         } catch (Exception e) {
