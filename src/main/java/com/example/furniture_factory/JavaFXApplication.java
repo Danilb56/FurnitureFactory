@@ -17,8 +17,9 @@ public class JavaFXApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/main-view.fxml"));
-        loader.setControllerFactory(i -> this.createMainController(stage));
+        loader.setControllerFactory(i -> this.createMainController());
         Parent content = loader.load();
+        stage.setMaximized(true);
 
         Scene scene = new Scene(content);
         stage.setTitle("Hello!");
@@ -26,8 +27,8 @@ public class JavaFXApplication extends Application {
         stage.show();
     }
 
-    private MainViewController createMainController(Stage stage) {
-        return new MainViewController(stage);
+    private MainViewController createMainController() {
+        return new MainViewController();
     }
 
     public static void init(String[] args) {

@@ -57,13 +57,12 @@ public class FurnitureController extends Controller<Furniture> {
 
     @FXML
     public void initialize() {
-        table.setEditable(true);
         this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         this.typeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {
             @Override
             public String toString(FurnitureTypeEnum s) {
-                return null;
+                return s.getLocalization();
             }
 
             @Override
@@ -99,6 +98,7 @@ public class FurnitureController extends Controller<Furniture> {
             Furniture savedFurniture = service.create(newFurniture);
             furnitureList.add(savedFurniture);
         } catch (Exception e) {
+            e.printStackTrace();
             // Выводим окно с ошибкой
         }
     }
@@ -123,6 +123,7 @@ public class FurnitureController extends Controller<Furniture> {
             service.update(furnitureToEdit); // Как только окно было закрыто кнопкой "Сохранить" пытаемся сохранить в бд
         } catch (SavingFailedException | IOException e) {
 
+            e.printStackTrace();
             // Выводим окно с ошибкой
         } finally {
             // Выводим результат изменения (Окно типа всё хорошо)
@@ -143,6 +144,7 @@ public class FurnitureController extends Controller<Furniture> {
             furnitureList.setAll(service.findAll());
             table.setItems(furnitureList);
         } catch (DataNotLoadedFromDBException e) {
+            e.printStackTrace();
             // Отобразить окно ошибки
         }
     }

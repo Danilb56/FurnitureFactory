@@ -25,6 +25,7 @@ public class ComponentService extends Service<Component> {
         String query = "select *" +
                 "from furniture_factory.component c";
 
+        System.out.println("Executed query: " + query);
         return selectFromDataBase(query);
     }
 
@@ -33,6 +34,7 @@ public class ComponentService extends Service<Component> {
         String query = "select *\n" +
                 "from furniture_factory.component c\n" +
                 "where c.id = " + id;
+        System.out.println("Executed query: " + query);
         List<Component> list = selectFromDataBase(query);
         if (list.size() > 0) {
             return list.get(0);
@@ -53,6 +55,7 @@ public class ComponentService extends Service<Component> {
 
             PreparedStatement ps = connection.prepareStatement(query);
 
+            System.out.println("Executed query: " + query);
             ps.executeUpdate();
 
         } catch (Exception e) {
@@ -71,6 +74,7 @@ public class ComponentService extends Service<Component> {
                     "where c.id = " + id;
 
             PreparedStatement ps = connection.prepareStatement(query);
+            System.out.println("Executed query: " + query);
 
             ps.execute();
 
@@ -86,11 +90,11 @@ public class ComponentService extends Service<Component> {
             String query = "insert into furniture_factory.component (code, price, type)\n" +
                     "        VALUES (" +
                     code + ", " +
-                    component.getPrice() + ", " +
-                    component.getType().getValue() + ")";
+                    component.getPrice() + ", '" +
+                    component.getType().getValue() + "')";
 
             PreparedStatement ps = connection.prepareStatement(query);
-
+            System.out.println("Executed query: " + query);
             ps.execute();
 
         } catch (Exception e) {
@@ -119,6 +123,7 @@ public class ComponentService extends Service<Component> {
                 "         left join furniture_component_link fcl\n" +
                 "                   on c.code = fcl.component_id\n" +
                 "where fcl.furniture_id = " + furnitureId;
+        System.out.println("Executed query: " + query);
         return selectFromDataBase(query);
     }
 

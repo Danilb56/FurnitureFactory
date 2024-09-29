@@ -4,22 +4,19 @@ import com.example.furniture_factory.enums.MainViewWindowEnum;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainViewController {
-    private final Stage stage;
-    public Pane pane;
+    public AnchorPane anchorPane;
     private MainViewWindowEnum currentWindow = null;
 
     public static final Map<MainViewWindowEnum, Controller<?>> controllerMap = new HashMap<>();
 
-    public MainViewController(Stage stage) {
-        this.stage = stage;
+    public MainViewController() {
     }
 
     @FXML
@@ -50,6 +47,8 @@ public class MainViewController {
         if (MainViewWindowEnum.COMPONENT_LIST.equals(currentWindow)) {
             return;
         }
+        this.currentWindow = MainViewWindowEnum.COMPONENT_LIST;
+        setContent();
     }
 
     @FXML
@@ -67,9 +66,9 @@ public class MainViewController {
             loader.setControllerFactory(i -> controllerMap.get(currentWindow));
             Parent content = loader.load();
 
-            pane.getChildren().setAll(content);
+            anchorPane.getChildren().setAll(content);
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 }

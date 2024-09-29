@@ -3,14 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.furniture_factory.controllers.MainViewController">
-    <ToolBar layoutX="6.0" layoutY="6.0" prefHeight="40.0" prefWidth="590.0">
-        <Button mnemonicParsing="false" text="Мебель" onAction="#switchToFurnitureList"/>
-        <Button mnemonicParsing="false" text="Линейки мебели" onAction="#switchToFurnitureLineList"/>
-        <Button mnemonicParsing="false" text="Компоненты" onAction="#switchToComponentList"/>
-        <Button mnemonicParsing="false" text="Аккаунт" onAction="#switchToAccountPage"/>
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.furniture_factory.controllers.MainViewController">
+    <ToolBar layoutX="20.0" layoutY="20.0" prefHeight="40.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <Button mnemonicParsing="false" onAction="#switchToFurnitureList" prefWidth="200.0" text="Мебель" />
+        <Button mnemonicParsing="false" onAction="#switchToFurnitureLineList" prefWidth="200.0" text="Линейки мебели" />
+        <Button mnemonicParsing="false" onAction="#switchToComponentList" prefWidth="200.0" text="Компоненты" />
+        <Button mnemonicParsing="false" onAction="#switchToAccountPage" prefWidth="200.0" text="Аккаунт" />
     </ToolBar>
-    <Pane layoutX="6.0" layoutY="46.0" prefHeight="354.0" prefWidth="590.0" fx:id="pane"/>
+    <AnchorPane fx:id="anchorPane" layoutX="20.0" layoutY="46.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
 </AnchorPane>

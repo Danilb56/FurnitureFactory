@@ -24,6 +24,7 @@ public class FurnitureLineService extends Service<FurnitureLine> {
         String query = "select *" +
                 "from furniture_factory.furniture_line fl";
 
+        System.out.println("Executed query: " + query);
         return selectFromDataBase(query);
     }
 
@@ -32,6 +33,7 @@ public class FurnitureLineService extends Service<FurnitureLine> {
         String query = "select *\n" +
                 "from furniture_factory.furniture_line fl\n" +
                 "where fl.id = " + id;
+        System.out.println("Executed query: " + query);
         List<FurnitureLine> list = selectFromDataBase(query);
         if (list.size() > 0) {
             return list.get(0);
@@ -51,6 +53,7 @@ public class FurnitureLineService extends Service<FurnitureLine> {
 
             PreparedStatement ps = connection.prepareStatement(query);
 
+            System.out.println("Executed query: " + query);
             ps.executeUpdate();
 
         } catch (Exception e) {
@@ -70,6 +73,7 @@ public class FurnitureLineService extends Service<FurnitureLine> {
 
             PreparedStatement ps = connection.prepareStatement(query);
 
+            System.out.println("Executed query: " + query);
             ps.execute();
 
         } catch (Exception e) {
@@ -86,6 +90,7 @@ public class FurnitureLineService extends Service<FurnitureLine> {
                     id + ", " +
                     furnitureLine.getName() + ")";
 
+            System.out.println("Executed query: " + query);
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.execute();

@@ -37,7 +37,6 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
 
     @FXML
     public void initialize() {
-        table.setEditable(true);
         this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         this.updatePage();
@@ -53,6 +52,7 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
             FurnitureLine savedFurnitureLine = service.create(newFurnitureLine);
             furnitureLineList.add(savedFurnitureLine);
         } catch (SavingFailedException | IOException e) {
+            e.printStackTrace();
             // Выводим окно с ошибкой
         } finally {
             // Выводим результат сохранения (Окно типа всё хорошо)
@@ -77,6 +77,7 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
             if (furnitureLineToEdit != null) {
                 furnitureLineList.add(furnitureLineToEdit); // Добавляем удалённую перед ошибкой линейку мебели
             }
+            e.printStackTrace();
             // Выводим окно с ошибкой
         } finally {
             // Выводим результат изменения (Окно типа всё хорошо)
@@ -89,6 +90,7 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
             furnitureLineList.setAll(service.findAll());
             table.setItems(furnitureLineList);
         } catch (DataNotLoadedFromDBException e) {
+            e.printStackTrace();
             // Отобразить окно ошибки
         }
     }

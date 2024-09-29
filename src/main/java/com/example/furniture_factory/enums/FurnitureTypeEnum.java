@@ -15,6 +15,10 @@ public enum FurnitureTypeEnum {
         return name;
     }
 
+    public String getLocalization() {
+        return localization;
+    }
+
     @Override
     public String toString() {
         return localization;

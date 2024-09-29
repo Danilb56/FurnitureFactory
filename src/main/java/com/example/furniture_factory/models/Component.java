@@ -9,6 +9,8 @@ public class Component {
 
     private Long count;
 
+    public Component() {}
+
     public Component(Long code, Long price, ComponentTypeEnum type) {
         this.code = code;
         this.price = price;

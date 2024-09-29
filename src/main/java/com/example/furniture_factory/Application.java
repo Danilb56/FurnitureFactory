@@ -1,5 +1,6 @@
 package com.example.furniture_factory;
 
+import com.example.furniture_factory.controllers.ComponentController;
 import com.example.furniture_factory.controllers.FurnitureController;
 import com.example.furniture_factory.controllers.FurnitureLineController;
 import com.example.furniture_factory.controllers.MainViewController;
@@ -20,7 +21,7 @@ public class Application {
             Connection connection = DriverManager.getConnection(
 //                    "jdbc:mysql://std-mysql.ist.mospolytech.ru:3306/std_1620_staff",
 //                    "std_1620_staff", "qwerty");
-                    "jdbc:mysql://localhost:3306",
+                    "jdbc:mysql://localhost:3306/furniture_factory",
                     "root", "Mysql_password");
 
             // Service code
@@ -35,7 +36,7 @@ public class Application {
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.FURNITURE_LINE_LIST, new FurnitureLineController(furnitureLineService));
             MainViewController.controllerMap.put(
-                    MainViewWindowEnum.COMPONENT_LIST, null);
+                    MainViewWindowEnum.COMPONENT_LIST, new ComponentController(componentService));
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.ACCOUNT_PAGE, null);
 
@@ -43,7 +44,7 @@ public class Application {
 
             connection.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 }
