@@ -29,8 +29,16 @@ create table if not exists furniture_component_link
 
 create table if not exists user
 (
-    id       int8,
+    id       int8 primary key,
     login    varchar(20) not null unique,
     password varchar(20) not null,
     role     varchar(20) not null
+);
+
+create table if not exists shop
+(
+    id       int8 primary key,
+    address  varchar(100) not null unique,
+    fax      varchar(10)  not null unique,
+    owner_id int8         not null
 );

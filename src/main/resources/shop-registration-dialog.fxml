@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.furniture_factory.controllers.ShopController">
+    <content>
+        <AnchorPane>
+            <TextField fx:id="addressTextField" layoutX="395.0" layoutY="102.0"/>
+            <TextField fx:id="faxTextField" layoutX="396.0" layoutY="166.0"/>
+            <TextField fx:id="ownerIdTextField" layoutX="396.0" layoutY="228.0"/>
+            <Label layoutX="148.0" layoutY="102.0" text="Адрес"/>
+            <Label layoutX="148.0" layoutY="166.0" text="Факс"/>
+            <Label layoutX="147.0" layoutY="228.0" text="ID владельца"/>
+            <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" text="Сохранить" onAction="#dialogSaveButton"/>
+            <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" text="Отмена" onAction="#dialogCancelButton"/>
+        </AnchorPane>
+    </content>
+</DialogPane>

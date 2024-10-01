@@ -51,7 +51,7 @@ public class ComponentController extends Controller<Component> {
 
     @FXML
     public void initialize() {
-        if (!user.getRole().getCanEditFactoryTables()) {
+        if (!user.getRole().canEditFactoryTables()) {
             addButton.setDisable(true);
             editButton.setDisable(true);
             deleteButton.setDisable(true);
@@ -93,11 +93,14 @@ public class ComponentController extends Controller<Component> {
     @FXML
     protected void editComponent() {
         try {
-            Long id = this.table.getSelectionModel().getSelectedItem().getCode();
+            Component selectedComponent = this.table.getSelectionModel().getSelectedItem();
+            if (selectedComponent == null) {
+                return;
+            }
             Component componentToEdit = null;
             int index = -1;
             for (int i = 0; i < componentList.size(); i++) {
-                if (componentList.get(i).getCode().equals(id)) {
+                if (componentList.get(i).getCode().equals(selectedComponent.getCode())) {
                     componentToEdit = componentList.get(i);
                     index = i;
                 }
@@ -121,7 +124,10 @@ public class ComponentController extends Controller<Component> {
 
     @FXML
     protected void deleteComponent() {
-        Component componentToDelete = table.getFocusModel().getFocusedItem();
+        Component componentToDelete = this.table.getSelectionModel().getSelectedItem();
+        if (componentToDelete == null) {
+            return;
+        }
         Long id = componentToDelete.getCode();
         service.deleteById(id);
         componentList.remove(componentToDelete);

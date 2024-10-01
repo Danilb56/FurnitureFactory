@@ -52,6 +52,24 @@ public class MainViewController {
     }
 
     @FXML
+    public void switchToShopList() {
+        if (MainViewWindowEnum.SHOP_LIST.equals(currentWindow)) {
+            return;
+        }
+        this.currentWindow = MainViewWindowEnum.SHOP_LIST;
+        setContent();
+    }
+
+    @FXML
+    public void switchToOrderList() {
+        if (MainViewWindowEnum.ORDER_LIST.equals(currentWindow)) {
+            return;
+        }
+        this.currentWindow = MainViewWindowEnum.ORDER_LIST;
+        setContent();
+    }
+
+    @FXML
     public void switchToAccountPage() {
         if (MainViewWindowEnum.ACCOUNT_PAGE.equals(currentWindow)) {
             return;

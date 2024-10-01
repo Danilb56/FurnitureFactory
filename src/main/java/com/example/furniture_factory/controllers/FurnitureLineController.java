@@ -40,7 +40,7 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
 
     @FXML
     public void initialize() {
-        if (!user.getRole().getCanEditFactoryTables()) {
+        if (!user.getRole().canEditFactoryTables()) {
             addButton.setDisable(true);
             editButton.setDisable(true);
         }
@@ -70,11 +70,14 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
     @FXML
     public void editFurnitureLine() {
         try {
-            Long id = this.table.getFocusModel().getFocusedItem().getId();
+            FurnitureLine selectedFurnitureLine = this.table.getSelectionModel().getSelectedItem();
+            if (selectedFurnitureLine == null) {
+                return;
+            }
             FurnitureLine furnitureLineToEdit = null;
             int index = -1;
             for (int i = 0; i < furnitureLineList.size(); i++) {
-                if (furnitureLineList.get(i).getId().equals(id)) {
+                if (furnitureLineList.get(i).getId().equals(selectedFurnitureLine.getId())) {
                     furnitureLineToEdit = furnitureLineList.get(i);
                     index = i;
                 }

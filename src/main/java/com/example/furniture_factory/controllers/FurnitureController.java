@@ -64,7 +64,7 @@ public class FurnitureController extends Controller<Furniture> {
 
     @FXML
     public void initialize() {
-        if (!user.getRole().getCanEditFactoryTables()) {
+        if (!user.getRole().canEditFactoryTables()) {
             addButton.setDisable(true);
             editButton.setDisable(true);
             deleteButton.setDisable(true);
@@ -120,11 +120,14 @@ public class FurnitureController extends Controller<Furniture> {
     @FXML
     protected void editFurniture() {
         try {
-            Long id = this.table.getFocusModel().getFocusedItem().getId();
+            Furniture selectedFurniture = this.table.getSelectionModel().getSelectedItem();
+            if (selectedFurniture == null) {
+                return;
+            }
             Furniture furnitureToEdit = null;
             int index = -1;
             for (int i = 0; i < furnitureList.size(); i++) {
-                if (furnitureList.get(i).getId().equals(id)) {
+                if (furnitureList.get(i).getId().equals(selectedFurniture.getId())) {
                     furnitureToEdit = furnitureList.get(i);
                     index = i;
                 }
@@ -147,7 +150,10 @@ public class FurnitureController extends Controller<Furniture> {
 
     @FXML
     protected void deleteFurniture() {
-        Furniture furnitureToDelete = table.getFocusModel().getFocusedItem();
+        Furniture furnitureToDelete = this.table.getSelectionModel().getSelectedItem();
+        if (furnitureToDelete == null) {
+            return;
+        }
         Long id = furnitureToDelete.getId();
         service.deleteById(id);
         furnitureList.remove(furnitureToDelete);

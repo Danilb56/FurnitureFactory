@@ -45,6 +45,7 @@ public class JavaFXApplication extends Application {
             loader.setLocation(JavaFXApplication.class.getResource(fxmlFilePath));
             loader.setControllerFactory(i -> controller);
             Parent content = loader.load();
+            mainStage.close();
 
             Scene scene = new Scene(content);
             mainStage.setTitle("Мебельная фабрика");

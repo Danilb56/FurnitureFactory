@@ -8,6 +8,8 @@
         <Button mnemonicParsing="false" onAction="#switchToFurnitureList" prefWidth="200.0" text="Мебель" />
         <Button mnemonicParsing="false" onAction="#switchToFurnitureLineList" prefWidth="200.0" text="Линейки мебели" />
         <Button mnemonicParsing="false" onAction="#switchToComponentList" prefWidth="200.0" text="Компоненты" />
+        <Button mnemonicParsing="false" onAction="#switchToShopList" prefWidth="200.0" text="Магазины" />
+        <Button mnemonicParsing="false" onAction="#switchToOrderList" prefWidth="200.0" text="Заказы" />
         <Button mnemonicParsing="false" onAction="#switchToAccountPage" prefWidth="200.0" text="Аккаунт" />
     </ToolBar>
     <AnchorPane fx:id="anchorPane" layoutX="20.0" layoutY="46.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />

@@ -1,15 +1,13 @@
 package com.example.furniture_factory.utils;
 
-import com.example.furniture_factory.services.ComponentService;
-import com.example.furniture_factory.services.FurnitureLineService;
-import com.example.furniture_factory.services.FurnitureService;
-import com.example.furniture_factory.services.UserService;
+import com.example.furniture_factory.services.*;
 
 public class IdUtils {
     private static Long lastFurnitureId = -1L;
     private static Long lastFurnitureLineId = -1L;
     private static Long lastComponentId = -1L;
     private static Long lastUserId = -1L;
+    private static Long lastShopId = -1L;
 
     public static Long getNewFurnitureId(FurnitureService furnitureService) {
         if (lastFurnitureId.equals(-1L)) {
@@ -41,5 +39,13 @@ public class IdUtils {
         }
         lastUserId++;
         return lastUserId;
+    }
+
+    public static Long getNewShopId(ShopService shopService) {
+        if (lastShopId.equals(-1L)) {
+            lastShopId = shopService.getLargestId();
+        }
+        lastShopId++;
+        return lastShopId;
     }
 }

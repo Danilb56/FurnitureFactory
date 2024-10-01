@@ -2,10 +2,7 @@ package com.example.furniture_factory;
 
 import com.example.furniture_factory.controllers.*;
 import com.example.furniture_factory.enums.MainViewWindowEnum;
-import com.example.furniture_factory.services.ComponentService;
-import com.example.furniture_factory.services.FurnitureLineService;
-import com.example.furniture_factory.services.FurnitureService;
-import com.example.furniture_factory.services.UserService;
+import com.example.furniture_factory.services.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,6 +28,8 @@ public class Application {
 
             UserService userService = new UserService(connection);
 
+            ShopService shopService = new ShopService(connection);
+
             // Controller creation
             JavaFXApplication.loginController = new LoginController(userService);
 
@@ -42,6 +41,12 @@ public class Application {
                     MainViewWindowEnum.COMPONENT_LIST, new ComponentController(componentService));
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.ACCOUNT_PAGE, new UserController(userService));
+            MainViewController.controllerMap.put(
+                    MainViewWindowEnum.SHOP_LIST, new ShopController(shopService)
+            );
+            MainViewController.controllerMap.put(
+                    MainViewWindowEnum.ORDER_LIST, null
+            );
 
             JavaFXApplication.init(args);
 
