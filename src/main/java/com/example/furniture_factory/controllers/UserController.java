@@ -1,22 +1,18 @@
 package com.example.furniture_factory.controllers;
 
+import com.example.furniture_factory.JavaFXApplication;
 import com.example.furniture_factory.models.User;
 import com.example.furniture_factory.services.Service;
-import com.example.furniture_factory.services.UserService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class UserController extends Controller<User> {
-    public static User user = null;
+import static com.example.furniture_factory.controllers.LoginController.user;
 
+public class UserController extends Controller<User>{
     @FXML
-    public PasswordField passwordField;
+    public TextField accountLoginField;
     @FXML
-    public TextField loginField;
-    @FXML
-    public Label incorrectPasswordLabel;
+    public TextField accountPasswordField;
 
     public UserController(Service<User> service) {
         super(service);
@@ -24,20 +20,27 @@ public class UserController extends Controller<User> {
 
     @Override
     public void initialize() {
-        incorrectPasswordLabel.setVisible(false);
+        accountLoginField.setText(user.getLogin());
+        accountPasswordField.setText(user.getPassword());
     }
 
-    public void tryLogin() {
-        String login = loginField.getText();
-        String password = passwordField.getText();
-        User user = ((UserService) service).findByLogin(login);
-        if (user != null && user.getPassword().equals(password)) {
-            UserController.user = user;
-            //Вход в систему
-        } else {
-            incorrectPasswordLabel.setVisible(true);
+    public void updateUser() {
+        try {
+            User updatedUser = new User(
+                    user.getId(),
+                    accountLoginField.getText(),
+                    accountPasswordField.getText(),
+                    user.getRole()
+            );
+            service.update(updatedUser);
+            user = updatedUser;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Показать окно с ошибкой
         }
     }
 
-
+    public void logout() {
+        JavaFXApplication.showLoginPageAfterLogout();
+    }
 }

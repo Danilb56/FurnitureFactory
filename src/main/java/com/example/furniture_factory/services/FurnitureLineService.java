@@ -87,8 +87,8 @@ public class FurnitureLineService extends Service<FurnitureLine> {
         try {
             String query = "insert into furniture_factory.furniture_line (id, name)\n" +
                     "        VALUES (" +
-                    id + ", " +
-                    furnitureLine.getName() + ")";
+                    id + ", '" +
+                    furnitureLine.getName() + "')";
 
             System.out.println("Executed query: " + query);
             PreparedStatement ps = connection.prepareStatement(query);

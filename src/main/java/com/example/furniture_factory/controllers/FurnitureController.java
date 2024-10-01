@@ -21,6 +21,8 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static com.example.furniture_factory.controllers.LoginController.user;
+
 public class FurnitureController extends Controller<Furniture> {
     private final Service<FurnitureLine> furnitureLineService;
 
@@ -48,6 +50,10 @@ public class FurnitureController extends Controller<Furniture> {
     @FXML
     public ChoiceBox<FurnitureLine> furnitureLineChoiceBox;
 
+    public Button deleteButton;
+    public Button addButton;
+    public Button editButton;
+
     private Dialog<Furniture> dialog;
 
     public FurnitureController(Service<Furniture> furnitureService,
@@ -58,6 +64,11 @@ public class FurnitureController extends Controller<Furniture> {
 
     @FXML
     public void initialize() {
+        if (!user.getRole().getCanEditFactoryTables()) {
+            addButton.setDisable(true);
+            editButton.setDisable(true);
+            deleteButton.setDisable(true);
+        }
         this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         this.typeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {

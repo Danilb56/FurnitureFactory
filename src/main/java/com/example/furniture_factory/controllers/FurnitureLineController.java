@@ -16,6 +16,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 
+import static com.example.furniture_factory.controllers.LoginController.user;
+
 public class FurnitureLineController extends Controller<FurnitureLine> {
     @FXML
     public TableView<FurnitureLine> table;
@@ -29,12 +31,19 @@ public class FurnitureLineController extends Controller<FurnitureLine> {
     protected ObservableList<FurnitureLine> furnitureLineList = FXCollections.observableArrayList();
     private Dialog<FurnitureLine> dialog;
 
+    public Button addButton;
+    public Button editButton;
+
     public FurnitureLineController(Service<FurnitureLine> furnitureLineService) {
         super(furnitureLineService);
     }
 
     @FXML
     public void initialize() {
+        if (!user.getRole().getCanEditFactoryTables()) {
+            addButton.setDisable(true);
+            editButton.setDisable(true);
+        }
         this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         this.updatePage();

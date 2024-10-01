@@ -49,8 +49,8 @@ public class UserService extends Service<User> {
             findById(user.getId());
 
             String query = "update furniture_factory.user u\n" +
-                    "set login              = " + user.getLogin() + ",\n" +
-                    "    password           = " + user.getPassword() + "\n" +
+                    "set login              = '" + user.getLogin() + "',\n" +
+                    "    password           = '" + user.getPassword() + "'\n" +
                     "where u.id = " + user.getId();
 
             PreparedStatement ps = connection.prepareStatement(query);
@@ -75,9 +75,9 @@ public class UserService extends Service<User> {
         try {
             String query = "insert into furniture_factory.user (id, login, password, role)\n" +
                     "        VALUES (" +
-                    id + ", " +
-                    user.getLogin() + ", " +
-                    user.getPassword() + ", '" +
+                    id + ", '" +
+                    user.getLogin() + "', '" +
+                    user.getPassword() + "', '" +
                     user.getRole().getValue() + "')";
 
             PreparedStatement ps = connection.prepareStatement(query);
@@ -94,8 +94,9 @@ public class UserService extends Service<User> {
     }
 
     public User findByLogin(String login) {
-        String query = "select * from furniture_factory.user u" +
-                "where u.login = " + login;
+        String query = "select * from furniture_factory.user u " +
+                "where u.login = '" + login + "'";
+        System.out.println("Executed query: " + query);
         List<User> foundUsers = selectFromDataBase(query);
         if (foundUsers.size() > 0) {
             return foundUsers.get(0);

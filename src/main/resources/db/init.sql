@@ -26,3 +26,11 @@ create table if not exists furniture_component_link
     component_id int8,
     count        int
 );
+
+create table if not exists user
+(
+    id       int8,
+    login    varchar(20) not null unique,
+    password varchar(20) not null,
+    role     varchar(20) not null
+);

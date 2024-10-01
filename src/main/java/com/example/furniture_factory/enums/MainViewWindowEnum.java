@@ -4,7 +4,7 @@ public enum MainViewWindowEnum {
     FURNITURE_LIST("furniture-list-view"),
     FURNITURE_LINE_LIST("furniture-line-list-view"),
     COMPONENT_LIST("component-list-view"),
-    ACCOUNT_PAGE(" ");
+    ACCOUNT_PAGE("account-page");
 
     private final String fxmlFileName;
 

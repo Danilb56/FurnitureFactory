@@ -56,6 +56,8 @@ public class MainViewController {
         if (MainViewWindowEnum.ACCOUNT_PAGE.equals(currentWindow)) {
             return;
         }
+        this.currentWindow = MainViewWindowEnum.ACCOUNT_PAGE;
+        setContent();
     }
 
     private void setContent() {

@@ -1,13 +1,11 @@
 package com.example.furniture_factory;
 
-import com.example.furniture_factory.controllers.ComponentController;
-import com.example.furniture_factory.controllers.FurnitureController;
-import com.example.furniture_factory.controllers.FurnitureLineController;
-import com.example.furniture_factory.controllers.MainViewController;
+import com.example.furniture_factory.controllers.*;
 import com.example.furniture_factory.enums.MainViewWindowEnum;
 import com.example.furniture_factory.services.ComponentService;
 import com.example.furniture_factory.services.FurnitureLineService;
 import com.example.furniture_factory.services.FurnitureService;
+import com.example.furniture_factory.services.UserService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,12 +22,17 @@ public class Application {
                     "jdbc:mysql://localhost:3306/furniture_factory",
                     "root", "Mysql_password");
 
-            // Service code
+            // Service creation
             ComponentService componentService = new ComponentService(connection);
 
             FurnitureService furnitureService = new FurnitureService(connection, componentService);
 
             FurnitureLineService furnitureLineService = new FurnitureLineService(connection);
+
+            UserService userService = new UserService(connection);
+
+            // Controller creation
+            JavaFXApplication.loginController = new LoginController(userService);
 
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.FURNITURE_LIST, new FurnitureController(furnitureService, furnitureLineService));
@@ -38,7 +41,7 @@ public class Application {
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.COMPONENT_LIST, new ComponentController(componentService));
             MainViewController.controllerMap.put(
-                    MainViewWindowEnum.ACCOUNT_PAGE, null);
+                    MainViewWindowEnum.ACCOUNT_PAGE, new UserController(userService));
 
             JavaFXApplication.init(args);
 
