@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ShopService extends Service<Shop> {
     public ShopService(Connection connection) {
@@ -104,6 +105,14 @@ public class ShopService extends Service<Shop> {
         }
         shop.setId(id);
         return shop;
+    }
+
+    public Optional<Long> getShopIdByOwnerId(Long ownerId) {
+        String query = """
+                select * from furniture_factory.shop s
+                where s.owner_id=""" + ownerId;
+        List<Shop> shops = selectFromDataBase(query);
+        return shops.stream().findAny().map(Shop::getId);
     }
 
     public Long getLargestId() {

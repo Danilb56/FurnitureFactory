@@ -64,21 +64,7 @@ public class FurnitureLineService extends Service<FurnitureLine> {
 
     @Override
     public void deleteById(Long id) {
-        try {
-            findById(id);
-
-            String query = "delete\n" +
-                    "from furniture_factory.furniture_line fl\n" +
-                    "where fl.id = " + id;
-
-            PreparedStatement ps = connection.prepareStatement(query);
-
-            System.out.println("Executed query: " + query);
-            ps.execute();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        throw new DataNotLoadedFromDBException("Невозможно удалить линейку мебели");
     }
 
     @Override

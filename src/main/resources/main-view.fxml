@@ -4,13 +4,14 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.furniture_factory.controllers.MainViewController">
-    <ToolBar layoutX="20.0" layoutY="20.0" prefHeight="40.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+    <ToolBar layoutX="20.0" layoutY="20.0" prefHeight="40.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="40.0">
         <Button mnemonicParsing="false" onAction="#switchToFurnitureList" prefWidth="200.0" text="Мебель" />
         <Button mnemonicParsing="false" onAction="#switchToFurnitureLineList" prefWidth="200.0" text="Линейки мебели" />
         <Button mnemonicParsing="false" onAction="#switchToComponentList" prefWidth="200.0" text="Компоненты" />
         <Button mnemonicParsing="false" onAction="#switchToShopList" prefWidth="200.0" text="Магазины" />
-        <Button mnemonicParsing="false" onAction="#switchToOrderList" prefWidth="200.0" text="Заказы" />
+        <Button fx:id="orderButton" mnemonicParsing="false" onAction="#switchToOrderList" prefWidth="200.0" text="Заказы" />
         <Button mnemonicParsing="false" onAction="#switchToAccountPage" prefWidth="200.0" text="Аккаунт" />
     </ToolBar>
     <AnchorPane fx:id="anchorPane" layoutX="20.0" layoutY="46.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
+   <Label AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="14.0" text="Label" fx:id="userLabel"/>
 </AnchorPane>

@@ -1,15 +1,17 @@
 package com.example.furniture_factory.enums;
 
 public enum Role {
-    ADMIN("ADMIN"),
-    DEFAULT("DEFAULT"),
-    SHOP_OWNER("SHOP_OWNER"),
-    CAN_EDIT_FACTORY_TABLES("CAN_EDIT_FACTORY_TABLES");
+    ADMIN("ADMIN", "администратор"),
+    DEFAULT("DEFAULT", "сотрудник"),
+    SHOP_OWNER("SHOP_OWNER", "владелец магазина"),
+    CAN_EDIT_FACTORY_TABLES("CAN_EDIT_FACTORY_TABLES", "редактор");
 
     private final String value;
+    private final String localization;
 
-    Role(String value) {
+    Role(String value, String localization) {
         this.value = value;
+        this.localization = localization;
     }
 
     public Boolean canCreateOrder() {
@@ -26,5 +28,9 @@ public enum Role {
 
     public String getValue() {
         return value;
+    }
+
+    public String getLocalization() {
+        return localization;
     }
 }

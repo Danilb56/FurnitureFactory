@@ -42,3 +42,17 @@ create table if not exists shop
     fax      varchar(10)  not null unique,
     owner_id int8         not null
 );
+
+create table if not exists orders
+(
+    id      int8 primary key,
+    date    varchar(15) not null,
+    shop_id int8 not null
+);
+
+create table if not exists order_furniture_link
+(
+    order_id     int8 not null,
+    furniture_id int8 not null,
+    count        int  not null check (count > 0)
+);

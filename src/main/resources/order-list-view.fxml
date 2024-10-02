@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.furniture_factory.controllers.OrderController">
+    <padding>
+        <Insets bottom="20.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+    <ToolBar>
+        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addOrder" prefWidth="200.0" text="Добавить" />
+        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteOrder" prefWidth="200.0" text="Удалить" />
+        <Button fx:id="editFurnitureListButton" mnemonicParsing="false" onAction="#editFurnitureList" prefWidth="200.0" text="Изменить комплектацию" />
+        <Button mnemonicParsing="false" onAction="#updatePage" prefWidth="200.0" text="Обновить" />
+    </ToolBar>
+    <HBox spacing="10">
+        <TableView fx:id="table" layoutX="10.0" layoutY="60.0">
+            <columns>
+                <TableColumn fx:id="orderNumberColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Номер заказа" />
+                <TableColumn fx:id="dateColumn" prefWidth="100.0" text="Дата" />
+                <TableColumn fx:id="shopIdColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="200.0" text="ID магазина" />
+            </columns>
+        </TableView>
+        <TableView fx:id="furnitureTable" layoutX="10.0" layoutY="60.0">
+            <columns>
+                <TableColumn fx:id="idColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="countColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" text="Кол-во" />
+                <TableColumn fx:id="typeColumn" prefWidth="100.0" text="Тип" />
+                <TableColumn fx:id="articleColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Артикул" />
+                <TableColumn fx:id="priceColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Цена" />
+                <TableColumn fx:id="furnitureLineColumn" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="110.0" text="Линейка мебели" />
+            </columns>
+        </TableView>
+        <HBox fx:id="furnitureFromDatabaseSection" spacing="10.0">
+            <VBox spacing="30.0">
+                <Button lineSpacing="30.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#moveFurnitureRight" prefHeight="30.0" prefWidth="30.0" text="-&gt;" />
+                <Button maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#moveFurnitureLeft" prefHeight="30.0" prefWidth="30.0" text="&lt;-" />
+                <padding>
+                    <Insets top="150.0" />
+                </padding>
+            </VBox>
+            <VBox spacing="30">
+                <TableView fx:id="furnitureFromDatabaseTable" layoutX="40.0" layoutY="60.0">
+                    <columns>
+                        <TableColumn fx:id="idColumn2" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="50.0" text="ID" />
+                        <TableColumn fx:id="typeColumn2" prefWidth="100.0" text="Тип" />
+                        <TableColumn fx:id="articleColumn2" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Артикул" />
+                        <TableColumn fx:id="priceColumn2" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="Цена" />
+                        <TableColumn fx:id="furnitureLineColumn2" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="110.0" text="Линейка мебели" />
+                    </columns>
+                </TableView>
+                <HBox spacing="30">
+                    <Button lineSpacing="30.0" mnemonicParsing="false" onAction="#saveFurnitureList" prefWidth="150.0" text="Сохранить" />
+                    <Button lineSpacing="30.0" mnemonicParsing="false" onAction="#cancel" prefWidth="150.0" text="Отмена" />
+                </HBox>
+            </VBox>
+        </HBox>
+    </HBox>
+</VBox>

@@ -4,6 +4,7 @@ import com.example.furniture_factory.JavaFXApplication;
 import com.example.furniture_factory.enums.Role;
 import com.example.furniture_factory.models.User;
 import com.example.furniture_factory.services.Service;
+import com.example.furniture_factory.services.ShopService;
 import com.example.furniture_factory.services.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,6 +13,8 @@ import java.util.Optional;
 
 public class LoginController extends Controller<User> {
     public static User user = null;
+    public static Long usersShopId = null;
+    private final ShopService shopService;
 
     @FXML
     public PasswordField passwordField;
@@ -20,8 +23,10 @@ public class LoginController extends Controller<User> {
     @FXML
     public Label incorrectPasswordLabel;
 
-    public LoginController(Service<User> service) {
+    public LoginController(Service<User> service,
+                           ShopService shopService) {
         super(service);
+        this.shopService = shopService;
     }
 
     @Override
@@ -35,6 +40,8 @@ public class LoginController extends Controller<User> {
         User user = ((UserService) service).findByLogin(login);
         if (user != null && user.getPassword().equals(password)) {
             LoginController.user = user;
+            LoginController.usersShopId = shopService.getShopIdByOwnerId(user.getId())
+                            .orElse(null);
             System.out.println("Выполнен вход в систему: " + login);
             JavaFXApplication.showMainApplicationAfterLogin();
         } else if (user == null) {
@@ -46,6 +53,10 @@ public class LoginController extends Controller<User> {
                         Role.DEFAULT
                 );
                 LoginController.user = service.create(newUser);
+                LoginController.usersShopId =
+                        shopService.getShopIdByOwnerId(LoginController.user.getId())
+                        .orElse(null);
+                System.out.println("Выполнен вход в систему: " + login);
                 JavaFXApplication.showMainApplicationAfterLogin();
             } else {
                 incorrectPasswordLabel.setVisible(true);

@@ -16,6 +16,7 @@ public class Furniture {
 
     private FurnitureLine furnitureLine;
     private final List<Component> components = new ArrayList<>();
+    private Integer count = 0;
 
     public Furniture() {
     }
@@ -87,6 +88,14 @@ public class Furniture {
 
     public void setFurnitureLine(FurnitureLine furnitureLine) {
         this.furnitureLine = furnitureLine;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     @Override

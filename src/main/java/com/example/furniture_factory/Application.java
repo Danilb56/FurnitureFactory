@@ -30,8 +30,10 @@ public class Application {
 
             ShopService shopService = new ShopService(connection);
 
+            OrderService orderService = new OrderService(connection, furnitureService);
+
             // Controller creation
-            JavaFXApplication.loginController = new LoginController(userService);
+            JavaFXApplication.loginController = new LoginController(userService, shopService);
 
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.FURNITURE_LIST, new FurnitureController(furnitureService, furnitureLineService));
@@ -42,11 +44,9 @@ public class Application {
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.ACCOUNT_PAGE, new UserController(userService));
             MainViewController.controllerMap.put(
-                    MainViewWindowEnum.SHOP_LIST, new ShopController(shopService)
-            );
+                    MainViewWindowEnum.SHOP_LIST, new ShopController(shopService));
             MainViewController.controllerMap.put(
-                    MainViewWindowEnum.ORDER_LIST, null
-            );
+                    MainViewWindowEnum.ORDER_LIST, new OrderController(orderService, furnitureService));
 
             JavaFXApplication.init(args);
 

@@ -14,7 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FurnitureService extends Service<Furniture> {
     private final ComponentService componentService;
@@ -165,5 +167,80 @@ public class FurnitureService extends Service<Furniture> {
             throw new DataNotLoadedFromDBException("Не удалось загрузить данные из базы");
         }
         return list;
+    }
+
+    public Map<Furniture, Integer> getFurnitureCountMapByOrderNumber(Long orderNumber) {
+        Map<Furniture, Integer> furnitureCountMap = new HashMap<>();
+
+        String query = """
+                select * from furniture_factory.furniture f
+                left join furniture_factory.order_furniture_link ofl
+                on f.id = ofl.furniture_id
+                left join furniture_factory.furniture_line fl
+                on fl.id = f.furniture_line_id
+                where ofl.order_id=""" + orderNumber;
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                FurnitureLine furnitureLine = new FurnitureLine(
+                        rs.getLong("fl.id"),
+                        rs.getString("name")
+                );
+
+                Furniture furniture = new Furniture(
+                        rs.getLong("f.id"),
+                        FurnitureTypeEnum.valueOf(rs.getString("type")),
+                        rs.getLong("article"),
+                        rs.getLong("price"),
+                        rs.getLong("furniture_line_id"),
+                        furnitureLine
+                );
+
+                List<Component> components =
+                        componentService.findAllByFurnitureId(furniture.getId());
+                furniture.addComponents(components);
+
+                Integer count = rs.getInt("count");
+
+                furnitureCountMap.put(furniture, count);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return furnitureCountMap;
+    }
+
+    public void saveFurnitureList(List<Furniture> list, Long orderId) {
+        try {
+            String deleteQuery = """
+                    delete from furniture_factory.order_furniture_link ofl
+                    where ofl.order_id = (?)""";
+
+            PreparedStatement ps1 = connection.prepareStatement(deleteQuery);
+            ps1.setLong(1, orderId);
+
+            ps1.execute();
+
+            String insertQuery = """
+                    insert into furniture_factory.order_furniture_link
+                    (order_id, furniture_id, count) VALUES ((?), (?), (?))""";
+
+            PreparedStatement ps2 = connection.prepareStatement(insertQuery);
+
+            for (Furniture furniture: list) {
+                ps2.setLong(1, orderId);
+                ps2.setLong(2, furniture.getId());
+                ps2.setInt(3, furniture.getCount());
+                ps2.addBatch();
+            }
+            ps2.executeBatch();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

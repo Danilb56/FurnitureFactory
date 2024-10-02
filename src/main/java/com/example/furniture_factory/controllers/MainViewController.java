@@ -1,9 +1,12 @@
 package com.example.furniture_factory.controllers;
 
 import com.example.furniture_factory.enums.MainViewWindowEnum;
+import com.example.furniture_factory.models.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -12,6 +15,8 @@ import java.util.Map;
 
 public class MainViewController {
     public AnchorPane anchorPane;
+    public Button orderButton;
+    public Label userLabel;
     private MainViewWindowEnum currentWindow = null;
 
     public static final Map<MainViewWindowEnum, Controller<?>> controllerMap = new HashMap<>();
@@ -22,6 +27,12 @@ public class MainViewController {
     @FXML
     public void initialize() {
         switchToFurnitureList();
+        if (LoginController.usersShopId != null) {
+            this.orderButton.setText("Мои заказы");
+        }
+        User user = LoginController.user;
+        userLabel.setText("Пользователь: " + user.getLogin() +
+                " (" + user.getRole().getLocalization() + ")");
     }
 
     @FXML

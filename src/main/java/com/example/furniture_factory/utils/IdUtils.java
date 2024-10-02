@@ -8,6 +8,7 @@ public class IdUtils {
     private static Long lastComponentId = -1L;
     private static Long lastUserId = -1L;
     private static Long lastShopId = -1L;
+    private static Long lastOrderId = -1L;
 
     public static Long getNewFurnitureId(FurnitureService furnitureService) {
         if (lastFurnitureId.equals(-1L)) {
@@ -47,5 +48,13 @@ public class IdUtils {
         }
         lastShopId++;
         return lastShopId;
+    }
+
+    public static Long getNewOrderId(OrderService orderService) {
+        if (lastOrderId.equals(-1L)) {
+            lastOrderId = orderService.getLargestId();
+        }
+        lastOrderId++;
+        return lastOrderId;
     }
 }
