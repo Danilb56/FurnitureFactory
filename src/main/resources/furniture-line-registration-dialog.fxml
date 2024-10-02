@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<DialogPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.furniture_factory.controllers.FurnitureLineController">
+<DialogPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.furniture_factory.controllers.FurnitureLineController">
     <content>
-        <AnchorPane prefHeight="303.0" prefWidth="566.0">
-            <TextField fx:id="nameTextField" layoutX="246.0" layoutY="135.0" prefHeight="23.0" prefWidth="299.0" />
-            <Label layoutX="148.0" layoutY="135.0" prefHeight="26.0" prefWidth="83.0" text="Наименование" />
-            <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" onAction="#dialogSaveButton" text="Сохранить" />
-            <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" onAction="#dialogCancelButton" text="Отмена" />
+        <AnchorPane>
+            <VBox spacing="40" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+                <HBox spacing="30">
+                    <VBox spacing="40">
+                        <Label prefHeight="25.6" text="Наименование"/>
+                    </VBox>
+                    <VBox spacing="40">
+                        <TextField fx:id="nameTextField" prefWidth="150"/>
+                    </VBox>
+                </HBox>
+                <HBox spacing="50">
+                    <Button layoutX="177.0" layoutY="277.0" mnemonicParsing="false" onAction="#dialogSaveButton"
+                            text="Сохранить"/>
+                    <Button layoutX="300.0" layoutY="277.0" mnemonicParsing="false" onAction="#dialogCancelButton"
+                            text="Отмена"/>
+                    <padding>
+                        <Insets left="40.0"/>
+                    </padding>
+                </HBox>
+            </VBox>
         </AnchorPane>
     </content>
 </DialogPane>

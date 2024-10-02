@@ -36,7 +36,7 @@ public class Application {
             JavaFXApplication.loginController = new LoginController(userService, shopService);
 
             MainViewController.controllerMap.put(
-                    MainViewWindowEnum.FURNITURE_LIST, new FurnitureController(furnitureService, furnitureLineService));
+                    MainViewWindowEnum.FURNITURE_LIST, new FurnitureController(furnitureService, furnitureLineService, componentService));
             MainViewController.controllerMap.put(
                     MainViewWindowEnum.FURNITURE_LINE_LIST, new FurnitureLineController(furnitureLineService));
             MainViewController.controllerMap.put(

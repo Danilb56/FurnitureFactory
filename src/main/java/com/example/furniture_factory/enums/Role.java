@@ -4,7 +4,7 @@ public enum Role {
     ADMIN("ADMIN", "администратор"),
     DEFAULT("DEFAULT", "сотрудник"),
     SHOP_OWNER("SHOP_OWNER", "владелец магазина"),
-    CAN_EDIT_FACTORY_TABLES("CAN_EDIT_FACTORY_TABLES", "редактор");
+    EDITOR("EDITOR", "редактор");
 
     private final String value;
     private final String localization;
@@ -19,7 +19,7 @@ public enum Role {
     }
 
     public Boolean canEditFactoryTables() {
-        return this.equals(ADMIN) || this.equals(CAN_EDIT_FACTORY_TABLES);
+        return this.equals(ADMIN) || this.equals(EDITOR);
     }
 
     public Boolean canEditShopTable() {

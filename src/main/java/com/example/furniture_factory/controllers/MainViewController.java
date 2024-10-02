@@ -17,6 +17,7 @@ public class MainViewController {
     public AnchorPane anchorPane;
     public Button orderButton;
     public Label userLabel;
+    public Label listLabel;
     private MainViewWindowEnum currentWindow = null;
 
     public static final Map<MainViewWindowEnum, Controller<?>> controllerMap = new HashMap<>();
@@ -41,6 +42,7 @@ public class MainViewController {
             return;
         }
         this.currentWindow = MainViewWindowEnum.FURNITURE_LIST;
+        this.listLabel.setText(this.currentWindow.getLabel());
         setContent();
     }
 
@@ -50,6 +52,7 @@ public class MainViewController {
             return;
         }
         this.currentWindow = MainViewWindowEnum.FURNITURE_LINE_LIST;
+        this.listLabel.setText(this.currentWindow.getLabel());
         setContent();
     }
 
@@ -59,6 +62,7 @@ public class MainViewController {
             return;
         }
         this.currentWindow = MainViewWindowEnum.COMPONENT_LIST;
+        this.listLabel.setText(this.currentWindow.getLabel());
         setContent();
     }
 
@@ -68,6 +72,7 @@ public class MainViewController {
             return;
         }
         this.currentWindow = MainViewWindowEnum.SHOP_LIST;
+        this.listLabel.setText(this.currentWindow.getLabel());
         setContent();
     }
 
@@ -77,6 +82,7 @@ public class MainViewController {
             return;
         }
         this.currentWindow = MainViewWindowEnum.ORDER_LIST;
+        this.listLabel.setText(this.currentWindow.getLabel());
         setContent();
     }
 
@@ -86,6 +92,7 @@ public class MainViewController {
             return;
         }
         this.currentWindow = MainViewWindowEnum.ACCOUNT_PAGE;
+        this.listLabel.setText(this.currentWindow.getLabel());
         setContent();
     }
 

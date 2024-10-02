@@ -33,7 +33,7 @@ public class ComponentService extends Service<Component> {
     public Component findById(Long id) {
         String query = "select *\n" +
                 "from furniture_factory.component c\n" +
-                "where c.id = " + id;
+                "where c.code = " + id;
         System.out.println("Executed query: " + query);
         List<Component> list = selectFromDataBase(query);
         if (list.size() > 0) {
@@ -50,10 +50,11 @@ public class ComponentService extends Service<Component> {
 
             String query = "update furniture_factory.component c\n" +
                     "set price              = '" + component.getPrice() + "',\n" +
-                    "type              = '" + component.getType().getValue() + "',\n" +
-                    "where c.id = " + component.getCode();
+                    "type              = (?)\n" +
+                    "where c.code = " + component.getCode();
 
             PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, component.getType().getValue());
 
             System.out.println("Executed query: " + query);
             ps.executeUpdate();
@@ -71,7 +72,7 @@ public class ComponentService extends Service<Component> {
 
             String query = "delete\n" +
                     "from furniture_factory.component c\n" +
-                    "where c.id = " + id;
+                    "where c.code = " + id;
 
             PreparedStatement ps = connection.prepareStatement(query);
             System.out.println("Executed query: " + query);
@@ -87,13 +88,15 @@ public class ComponentService extends Service<Component> {
     public Component create(Component component) {
         Long code = IdUtils.getNewComponentId(this);
         try {
-            String query = "insert into furniture_factory.component (code, price, type)\n" +
-                    "        VALUES (" +
-                    code + ", " +
-                    component.getPrice() + ", '" +
-                    component.getType().getValue() + "')";
+            String query = """
+                            insert into furniture_factory.component (code, price, type) VALUES 
+                            ((?), (?), (?))""";
 
             PreparedStatement ps = connection.prepareStatement(query);
+            ps.setLong(1, code);
+            ps.setLong(2, component.getPrice());
+            ps.setString(3, component.getType().getValue());
+
             System.out.println("Executed query: " + query);
             ps.execute();
 
@@ -118,7 +121,7 @@ public class ComponentService extends Service<Component> {
     }
 
     public List<Component> findAllByFurnitureId(Long furnitureId) {
-        String query = "select code, price, type\n" +
+        String query = "select code, price, type, count\n" +
                 "from component c\n" +
                 "         left join furniture_component_link fcl\n" +
                 "                   on c.code = fcl.component_id\n" +
@@ -143,6 +146,10 @@ public class ComponentService extends Service<Component> {
                         ComponentTypeEnum.valueOf(rs.getString("type"))
                 );
 
+                if (rs.getMetaData().getColumnCount() > 3) {
+                    component.setCount(rs.getLong("count"));
+                }
+
                 list.add(component);
             }
         } catch (SQLException e) {
@@ -150,5 +157,37 @@ public class ComponentService extends Service<Component> {
             throw new DataNotLoadedFromDBException("Не удалось загрузить данные из базы");
         }
         return list;
+    }
+
+    public void saveComponentList(List<Component> componentList, Long furnitureId) {
+        try {
+            String deleteQuery = """
+                    delete from furniture_factory.furniture_component_link fcl
+                    where fcl.furniture_id = (?)""";
+
+            PreparedStatement ps1 = connection.prepareStatement(deleteQuery);
+            ps1.setLong(1, furnitureId);
+            System.out.println("Executed query: " + deleteQuery);
+
+            ps1.execute();
+
+            String insertQuery = """
+                    insert into furniture_factory.furniture_component_link
+                    (component_id, furniture_id, count) VALUES ((?), (?), (?))""";
+
+            PreparedStatement ps2 = connection.prepareStatement(insertQuery);
+
+            for (Component component: componentList) {
+                ps2.setLong(1, component.getCode());
+                ps2.setLong(2, furnitureId);
+                ps2.setLong(3, component.getCount());
+                ps2.addBatch();
+            }
+            System.out.println("Executed query " + componentList.size() + " times: " + insertQuery);
+
+            ps2.executeBatch();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

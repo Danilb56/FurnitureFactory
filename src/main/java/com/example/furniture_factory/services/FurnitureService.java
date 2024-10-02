@@ -222,7 +222,7 @@ public class FurnitureService extends Service<Furniture> {
 
             PreparedStatement ps1 = connection.prepareStatement(deleteQuery);
             ps1.setLong(1, orderId);
-
+            System.out.println("Executed query: " + deleteQuery);
             ps1.execute();
 
             String insertQuery = """
@@ -231,16 +231,16 @@ public class FurnitureService extends Service<Furniture> {
 
             PreparedStatement ps2 = connection.prepareStatement(insertQuery);
 
-            for (Furniture furniture: list) {
+            for (Furniture furniture : list) {
                 ps2.setLong(1, orderId);
                 ps2.setLong(2, furniture.getId());
                 ps2.setInt(3, furniture.getCount());
                 ps2.addBatch();
             }
+            System.out.println("Executed query " + list.size() + " times: " + insertQuery);
             ps2.executeBatch();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

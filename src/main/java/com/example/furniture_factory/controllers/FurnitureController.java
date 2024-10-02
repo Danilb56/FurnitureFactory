@@ -1,11 +1,14 @@
 package com.example.furniture_factory.controllers;
 
+import com.example.furniture_factory.enums.ComponentTypeEnum;
 import com.example.furniture_factory.enums.FurnitureTypeEnum;
 import com.example.furniture_factory.exceptions.DataNotLoadedFromDBException;
 import com.example.furniture_factory.exceptions.NotFoundException;
 import com.example.furniture_factory.exceptions.SavingFailedException;
+import com.example.furniture_factory.models.Component;
 import com.example.furniture_factory.models.Furniture;
 import com.example.furniture_factory.models.FurnitureLine;
+import com.example.furniture_factory.services.ComponentService;
 import com.example.furniture_factory.services.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -25,6 +29,7 @@ import static com.example.furniture_factory.controllers.LoginController.user;
 
 public class FurnitureController extends Controller<Furniture> {
     private final Service<FurnitureLine> furnitureLineService;
+    private final ComponentService componentService;
 
     @FXML
     public TableView<Furniture> table;
@@ -53,13 +58,31 @@ public class FurnitureController extends Controller<Furniture> {
     public Button deleteButton;
     public Button addButton;
     public Button editButton;
+    public TableView<Component> componentTable;
+    public TableColumn<Component, Long> codeColumn1;
+    public TableColumn<Component, Long> priceColumn1;
+    public TableColumn<String, ComponentTypeEnum> typeColumn1;
+    public Button saveComponentListButton;
+    public TableView<Component> componentFromDatabaseTable;
+    public TableColumn<Component, Long> codeColumn2;
+    public TableColumn<Component, Long> priceColumn2;
+    public TableColumn<String, ComponentTypeEnum> typeColumn2;
+    public Button cancel;
+    public HBox componentFromDatabaseSection;
+    public Button editComponentListButton;
+    public TableColumn<Component, Long> countColumn1;
 
     private Dialog<Furniture> dialog;
+    private Long currentEditingFurnitureId;
+    private final ObservableList<Component> componentList = FXCollections.observableArrayList();
+    private final ObservableList<Component> componentFromDatabaseList = FXCollections.observableArrayList();
 
     public FurnitureController(Service<Furniture> furnitureService,
-                               Service<FurnitureLine> furnitureLineService) {
+                               Service<FurnitureLine> furnitureLineService,
+                               ComponentService componentService) {
         super(furnitureService);
         this.furnitureLineService = furnitureLineService;
+        this.componentService = componentService;
     }
 
     @FXML
@@ -67,6 +90,7 @@ public class FurnitureController extends Controller<Furniture> {
         if (!user.getRole().canEditFactoryTables()) {
             addButton.setDisable(true);
             editButton.setDisable(true);
+            editComponentListButton.setDisable(true);
             deleteButton.setDisable(true);
         }
         this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -97,6 +121,49 @@ public class FurnitureController extends Controller<Furniture> {
                         return null;
                     }
                 }));
+
+        this.codeColumn1.setCellValueFactory(new PropertyValueFactory<>("code"));
+        this.countColumn1.setCellValueFactory(new PropertyValueFactory<>("count"));
+        this.typeColumn1.setCellValueFactory(new PropertyValueFactory<>("type"));
+        this.typeColumn1.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {
+            @Override
+            public String toString(ComponentTypeEnum s) {
+                return s.getLocalization();
+            }
+
+            @Override
+            public ComponentTypeEnum fromString(String s) {
+                return null;
+            }
+        }));
+        this.priceColumn1.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        this.codeColumn2.setCellValueFactory(new PropertyValueFactory<>("code"));
+        this.typeColumn2.setCellValueFactory(new PropertyValueFactory<>("type"));
+        this.typeColumn2.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {
+            @Override
+            public String toString(ComponentTypeEnum s) {
+                return s.getLocalization();
+            }
+
+            @Override
+            public ComponentTypeEnum fromString(String s) {
+                return null;
+            }
+        }));
+        this.priceColumn2.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        this.table.getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldSelection, newSelection) -> {
+                    if (newSelection == null) {
+                        this.componentList.clear();
+                    } else {
+                        this.componentList.setAll(newSelection.getComponents());
+                    }
+                });
+
+        hideComponentDatabaseSection();
+
         this.updatePage();
     }
 
@@ -164,6 +231,8 @@ public class FurnitureController extends Controller<Furniture> {
         try {
             furnitureList.setAll(service.findAll());
             table.setItems(furnitureList);
+            componentList.clear();
+            componentTable.setItems(componentList);
         } catch (DataNotLoadedFromDBException e) {
             e.printStackTrace();
             // Отобразить окно ошибки
@@ -220,5 +289,81 @@ public class FurnitureController extends Controller<Furniture> {
 
     public void dialogCancelButton() {
         this.dialog.close();
+    }
+
+    public void moveComponentRight() {
+        Component component = componentTable.getSelectionModel().getSelectedItem();
+        if (component == null) {
+            return;
+        }
+
+        for (int i = 0; i < componentList.size(); i++) {
+            if (componentList.get(i).equals(component)) {
+                if (component.getCount() > 1) {
+                    component.setCount(component.getCount() - 1);
+                    componentList.set(i, componentList.get(i));
+                } else {
+                    componentList.remove(i);
+                }
+                break;
+            }
+        }
+    }
+
+    public void moveComponentLeft() {
+        Component component = componentFromDatabaseTable.getSelectionModel().getSelectedItem();
+        if (component == null) {
+            return;
+        }
+        for (int i = 0; i < componentList.size(); i++) {
+            if (componentList.get(i).equals(component)) {
+                componentList.get(i).setCount(componentList.get(i).getCount() + 1);
+                componentList.set(i, componentList.get(i));
+                return;
+            }
+        }
+        component.setCount(1L);
+        componentList.add(component);
+    }
+
+    public void editComponentList() {
+        Furniture furniture = table.getSelectionModel().getSelectedItem();
+        if (furniture == null) {
+            return;
+        }
+        this.currentEditingFurnitureId = furniture.getId();
+        if (!this.componentFromDatabaseSection.isVisible()) {
+            this.componentFromDatabaseList.setAll(componentService.findAll());
+            this.componentFromDatabaseTable.setItems(this.componentFromDatabaseList);
+        }
+        this.table.setDisable(true);
+        showComponentDatabaseSection();
+    }
+
+    public void saveComponentList() {
+        Furniture furniture = table.getSelectionModel().getSelectedItem();
+        if (furniture == null) {
+            return;
+        }
+        this.table.setDisable(false);
+        hideComponentDatabaseSection();
+        componentService.saveComponentList(componentList, currentEditingFurnitureId);
+        furniture.addComponents(componentList);
+    }
+
+    public void cancel() {
+        hideComponentDatabaseSection();
+        this.table.setDisable(false);
+        updatePage();
+    }
+
+    private void hideComponentDatabaseSection() {
+        this.componentFromDatabaseSection.setVisible(false);
+        this.componentFromDatabaseSection.setMaxWidth(1);
+    }
+
+    private void showComponentDatabaseSection() {
+        this.componentFromDatabaseSection.setVisible(true);
+        this.componentFromDatabaseSection.setMaxWidth(1000);
     }
 }

@@ -6,7 +6,7 @@ import com.example.furniture_factory.models.Furniture;
 import com.example.furniture_factory.models.FurnitureLine;
 import com.example.furniture_factory.models.Order;
 import com.example.furniture_factory.services.FurnitureService;
-import com.example.furniture_factory.services.Service;
+import com.example.furniture_factory.services.OrderService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -89,7 +89,7 @@ public class OrderController extends Controller<Order> {
 
     private Long currentEditingOrderNumber;
 
-    public OrderController(Service<Order> orderService,
+    public OrderController(OrderService orderService,
                            FurnitureService furnitureService) {
         super(orderService);
         this.furnitureService = furnitureService;
@@ -229,7 +229,11 @@ public class OrderController extends Controller<Order> {
     @FXML
     protected void updatePage() {
         try {
-            orderList.setAll(service.findAll());
+            if (usersShopId == null) {
+                orderList.setAll(service.findAll());
+            } else {
+                orderList.setAll(((OrderService) service).findAllByShopOwnerId(usersShopId));
+            }
             table.setItems(orderList);
             furnitureList.clear();
             furnitureTable.setItems(furnitureList);

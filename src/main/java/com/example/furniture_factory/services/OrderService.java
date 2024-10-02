@@ -1,6 +1,5 @@
 package com.example.furniture_factory.services;
 
-import com.example.furniture_factory.controllers.LoginController;
 import com.example.furniture_factory.exceptions.DataNotLoadedFromDBException;
 import com.example.furniture_factory.exceptions.NotFoundException;
 import com.example.furniture_factory.exceptions.SavingFailedException;
@@ -31,9 +30,14 @@ public class OrderService extends Service<Order> {
         String query = """
                 select * from furniture_factory.orders o""";
 
-        if (LoginController.usersShopId != null) {
-            query += "\nwhere o.shop_id = " + LoginController.usersShopId;
-        }
+        System.out.println("Executed query: " + query);
+        return selectFromDataBase(query);
+    }
+
+    public List<Order> findAllByShopOwnerId(Long shopOwnerId) {
+        String query = """
+                select * from furniture_factory.orders o
+                where o.shop_id=""" + shopOwnerId;
 
         System.out.println("Executed query: " + query);
         return selectFromDataBase(query);

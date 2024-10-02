@@ -48,7 +48,7 @@ public class FurnitureLineService extends Service<FurnitureLine> {
             findById(furnitureLine.getId());
 
             String query = "update furniture_factory.furniture_line fl\n" +
-                    "set name              = '" + furnitureLine.getName() + "',\n" +
+                    "set name              = '" + furnitureLine.getName() + "'\n" +
                     "where fl.id = " + furnitureLine.getId();
 
             PreparedStatement ps = connection.prepareStatement(query);

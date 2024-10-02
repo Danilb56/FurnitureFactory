@@ -2,12 +2,14 @@ package com.example.furniture_factory.models;
 
 import com.example.furniture_factory.enums.ComponentTypeEnum;
 
+import java.util.Objects;
+
 public class Component {
     private Long code;
     private Long price;
     private ComponentTypeEnum type;
 
-    private Long count;
+    private Long count = 0L;
 
     public Component() {}
 
@@ -57,5 +59,18 @@ public class Component {
                 ", type=" + type +
                 ", count=" + count +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Component component = (Component) o;
+        return Objects.equals(code, component.code) && Objects.equals(price, component.price) && type == component.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, price, type);
     }
 }

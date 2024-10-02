@@ -50,7 +50,7 @@ public class ShopService extends Service<Shop> {
             String query = "update furniture_factory.shop s\n" +
                     "set address              = '" + shop.getAddress() + "',\n" +
                     "    fax           = '" + shop.getFax() + "',\n" +
-                    "    owner_id             = " + shop.getOwnerId() + ",\n" +
+                    "    owner_id             = " + shop.getOwnerId() + "\n" +
                     "where s.id = " + shop.getId();
 
             PreparedStatement ps = connection.prepareStatement(query);
