@@ -4,8 +4,11 @@ import com.example.furniture_factory.controllers.*;
 import com.example.furniture_factory.enums.MainViewWindowEnum;
 import com.example.furniture_factory.services.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class Application {
     public static void main(String[] args) {
@@ -18,6 +21,27 @@ public class Application {
 //                    "std_1620_staff", "qwerty");
                     "jdbc:mysql://localhost:3306/furniture_factory",
                     "root", "Mysql_password");
+
+            Statement statement = connection.createStatement();
+
+            String filePath = Application.class.getResource("/db/init.sql")
+                    .getFile().replaceAll("%20", " ");
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+
+            StringBuilder query = new StringBuilder();
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                query.append(line).append("\n");
+                if (line.trim().endsWith(";")) {
+                    System.out.println("Executed query: \n" + query.toString().trim());
+                    statement.execute(query.toString().trim());
+                    query = new StringBuilder();
+                }
+            }
+
+            System.out.println("init.sql executed");
+
 
             // Service creation
             ComponentService componentService = new ComponentService(connection);
